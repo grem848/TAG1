@@ -16,7 +16,8 @@ public class Game
     
     io.put("Indtast navn");
     String name = io.get();
-    System.out.println(name);    
+    System.out.println(name);
+    System.out.println("hej");
     
     
     io.put("Indtast køn");
