@@ -10,9 +10,10 @@ public class Game
 {
 
     public Game() 
-    {  
-    TextIO io = new TextIO(new SysTextIO());
+    {
     
+    TextIO io = new TextIO(new SysTextIO());
+    ArrayList<String> rooms = new ArrayList<>();
     
     io.put("Indtast navn");
     String name = io.get();
@@ -25,20 +26,38 @@ public class Game
     Player player = new Player(name, gender);
     List<String> l = Arrays.asList(new String[]{"Go North","Go West","Go East","Go South"});
     
+    Room rx = new Room(""); // Current room
     Room r1 = new Room("Start Room \nA long hallway, the door behind you is locked.\nThere is a door to the North.");
     Room r2 = new Room("A room with a painting");
+    Room r3 = new Room("The end");
+    
+    
     r1.setNorth(r2);
     r2.setSouth(r1);
-    io.put(r1.getDescription());
+    r2.setNorth(r3);
+    r3.setSouth(r2);
     
-    ArrayList<String> rooms = new ArrayList<>();
+    RoomOne(io, r1, rooms);
     
-    
-    PickDirection(r1, rooms, io);
-    
+        while (!(rx == r3))
+        {
+        if(rx.)
+        rx = 
+        io.put(rx.getDescription());
+        PickDirection(rx, rooms, io);
+        }
     }
 
-    private void PickDirection(Room r1, ArrayList<String> rooms, TextIO io) {
+    private void RoomOne(TextIO io, Room r1, ArrayList<String> rooms) 
+    {
+        Room rx = r1;
+        io.put(r1.getDescription());
+        PickDirection(r1, rooms, io);
+    }
+
+    private void PickDirection(Room r1, ArrayList<String> rooms, TextIO io) 
+    {
+
         if (!(r1.getSouth() == null ))
         {
             rooms.add("South");
