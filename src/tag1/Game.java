@@ -1,19 +1,19 @@
 package tag1;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import textio.SysTextIO;
-import textio.TextIO;
+import textio.*;
 
-public class Game {
+public class Game 
+{
         Player player;
         Room rx = null; // Current room
         ArrayList<Room> rooms = new ArrayList<>();
         TextIO io = new TextIO(new SysTextIO());
         ArrayList<String> validDirections = new ArrayList<>();
         
-    public Game() {
+    public Game() 
+    {
 
 
         io.put("Indtast navn");
@@ -24,11 +24,10 @@ public class Game {
         String gender = io.get();
         System.out.println(gender);
         player = new Player(name, gender);
-        List<String> l = Arrays.asList(new String[]{"Go North", "Go West", "Go East", "Go South"});
 
-        rooms.add(new Room("Start Room \nA long hallway, the door behind you is locked.\nThere is a door to the North."));
+        rooms.add(new Room("Entrance \nA long hallway, the door behind you is locked.\nThere is a door to the North."));
         rooms.add(new Room("A room with a painting"));
-        rooms.add(new Room("The end"));
+        rooms.add(new Room("Winner winner chicken dinner!\nYou found the treasure room and won the game!"));
 
         rooms.get(0).setNorth(rooms.get(1));
         rooms.get(1).setSouth(rooms.get(0));
@@ -39,46 +38,85 @@ public class Game {
         play();
     }
     
-    public void play(){
-        while(!rx.equals(rooms.get(2))){
+    public void play()
+    {
+        while(!rx.equals(rooms.get(2)))
+        {
             io.put(rx.getDescription());
             getValidDirections();
-            int select = io.select("\nPick a direction to go\n", validDirections, "");
+            int select = io.select("\n\nPick a direction to go\n", validDirections, "");
             System.out.println(select);
-            
+            goToRoom(); // New
+            chickenDinner(); // New
         }
         
     }
 
-    private void getValidDirections() {
 
-        if (!(rx.getSouth() == null)) {
-            validDirections.add("South");
+    private void goToRoom() 
+    { // New Method
+        
+            /* io.select.nextInt().equals(0)
+             change validDirections.get(0).equals("Go ...") to the the next console out
+             = 1 for north, 2 for south, 3 for east, 4 for west
+            */
+            if (System.console().readLine().equals(0)) // wrong
+            {
+                rx = rx.getNorth();
+            }
+            if (System.console().readLine().equals(1)) // wrong
+            {
+                rx = rx.getSouth();
+            }            
+            if (validDirections.get(0).equals("Go East")) // wrong
+            {
+                rx = rx.getEast();
+            }            
+            if (validDirections.get(0).equals("Go West")) // wrong
+            {
+                rx = rx.getWest();
+            }
+            validDirections.clear();
+    }
+    
+    private void chickenDinner() 
+    { // New Method
+        if (rx.equals(rooms.get(2)))
+        {
+            System.out.println(rooms.get(2).getDescription());
+            System.out.println("\n(╯°□°）╯︵ ┻━┻");
+            System.out.println("\nPress F6 to play again!");
+            System.out.println("\n┬─┬﻿ ノ( ゜-゜ノ)\n");
         }
-        if (!(rx.getNorth() == null)) {
-            validDirections.add("North");
+        
+    }            
+            
+    private void getValidDirections() 
+    {
+        
+        if (!(rx.getNorth() == null)) 
+        {
+            validDirections.add("Go North");
         }
-        if (!(rx.getEast() == null)) {
-            validDirections.add("East");
+        if (!(rx.getSouth() == null)) 
+        {
+            validDirections.add("Go South");
         }
-        if (!(rx.getWest() == null)) {
-            validDirections.add("West");
+        if (!(rx.getEast() == null)) 
+        {
+            validDirections.add("Go East");
+        }
+        if (!(rx.getWest() == null)) 
+        {
+            validDirections.add("Go West");
         }
         
     }
 
 //    System.out.println(name + ", " + "ow you hit a wall!");
-//    List<String> l = Arrays.asList(new String[]{"Go North","Go West","Go East","Go South"});
-//    int select = io.select("Start Room \nA long hallway, the door behind you is locked.\nThere is a door to the North.", l,"");
-//    System.out.println(select);
 //    
 //    if (!(System.in == Arrays.asList(0)))
 //    {
 //        System.out.println(name + ", " + "ow you hit a wall!");
-//        io.select("Start Room \nA long hallway, the door behind you is locked.\nThere is a door to the North.", l,"");
-//        System.out.println(select);
 //    }
-//    
-//    io.select("Entrance \nA room with a football on the floor", l,"");
-//    System.out.println(select);
 }
