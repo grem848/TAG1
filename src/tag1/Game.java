@@ -30,39 +30,46 @@ public class Game
     r1.setNorth(r2);
     r2.setSouth(r1);
     io.put(r1.getDescription());
+    
     ArrayList<String> rooms = new ArrayList<>();
     
     
-    if (!(r1.getSouth() == null ))
-    {
-        rooms.add("South");
+    PickDirection(r1, rooms, io);
+    
+    }
+
+    private void PickDirection(Room r1, ArrayList<String> rooms, TextIO io) {
+        if (!(r1.getSouth() == null ))
+        {
+            rooms.add("South");
 //        System.out.println("You went South into the next room.\n");
 //        System.out.println(r2.getDescription());
-    }
-    if (!(r1.getNorth() == null))
-    {
-        rooms.add("North");
+        }
+        if (!(r1.getNorth() == null))
+        {
+            rooms.add("North");
 //        System.out.println("You went North into the next room.\n");
 //        System.out.println(r2.getDescription());
-    }
-    if (!(r1.getEast() == null))
-    {
-        rooms.add("East");
+        }
+        if (!(r1.getEast() == null))
+        {
+            rooms.add("East");
 //        System.out.println("You went East into the next room.\n");
 //        System.out.println(r2.getDescription());
-    }
-    if (!(r1.getWest() == null))
-    {
-        rooms.add("West");
+        }
+        if (!(r1.getWest() == null))
+        {
+            rooms.add("West");
 //        System.out.println("You went West into the next room.\n");
 //        System.out.println(r2.getDescription());
+        }
+        
+        int select = io.select("\nPick a direction to go\n", rooms, "");
+        System.out.println(select);
     }
-    
-    int select = io.select("\nPick a direction to go\n", rooms, "");
-    System.out.println(select);
-
-
-    
+        
+        
+        
 //    System.out.println(name + ", " + "ow you hit a wall!");
 
 //    List<String> l = Arrays.asList(new String[]{"Go North","Go West","Go East","Go South"});
@@ -78,7 +85,5 @@ public class Game
 //    
 //    io.select("Entrance \nA room with a football on the floor", l,"");
 //    System.out.println(select);
-    
-    }
     
 }
