@@ -11,6 +11,11 @@ public class Game
         ArrayList<Room> rooms = new ArrayList<>();
         TextIO io = new TextIO(new SysTextIO());
         ArrayList<String> validDirections = new ArrayList<>(4);
+        public static final String NORTH = "Go North";
+        public static final String SOUTH = "Go South";
+        public static final String EAST = "Go East";
+        public static final String WEST = "Go West";
+        
         
     public Game() 
     {
@@ -36,18 +41,18 @@ public class Game
     private void newRoom() 
     {
         // Room 0
-        rooms.add(new Room("0The entrance is small dark room with a locked door behind you."));
+        rooms.add(new Room("\n*Mansion Entrance*\nThe entrance is a small dark room with a locked door to the south."));
         // Room 1
-        rooms.add(new Room("1The entrance hall was so big you could have fit  1000 pigs in it."
-                + "  The stone walls  was lit with torches that had burned out years ago,"
-                + "  the ceiling was covered with spider web"));
+        rooms.add(new Room("\n*Entrance Hall*\nThe entrance hall is so big you can fit 1000 pigs in it.\n"
+                + "The black stone walls used to be lit with torches that burned out years ago,\n"
+                + "and the ceiling is covered in spider web"));
         // Room 2
-        rooms.add(new Room("2The hallway is wide and straight like the old canal that cuts through the city."
-                + " there where alot of paintings, but it was impossible to make out what they were suppose to show."));
+        rooms.add(new Room("\n*The Eastern Hallway*\nThe eastern hallway is wide and straight like the old canal that cuts through the nearby city.\n"
+                + "The hallway is filled with paintings with faded and crackled images,\n it is almost impossible to make out what they used to portray."));
         // Room 3
-        rooms.add(new Room("3the dining room had once been an impressive dining-room"
-                + " but years of neglect had taken its toll. The table was long and solid wood."
-                + " some of the food was still on table."));
+        rooms.add(new Room("\n*The Dining Room*\nThe dining room had once been an impressive dining room\n"
+                + "but years of neglect had taken its toll on the interior."
+                + "In the middle of the room stands a long oak tablesome of the food was still on table."));
         // Room 4
         rooms.add(new Room("4The basement was barely more than crawl space,"
                 + " you had to hang your head low just to walk in there. There was a crul stench of death."));
@@ -141,60 +146,23 @@ public class Game
             getValidDirections();
             int select = io.select("\n\nPick a direction to go\n", validDirections, "");
             System.out.println(select);
-            goToRoom(select);
+            goToRoom(select, validDirections);
             chickenDinner();
         }
         
     }
 
 
-    private void goToRoom(int input)  
+    private void goToRoom(int input, ArrayList<String> validDirections1)  
     {
         // input++;
-            if (input == 0)
-            {
-                if(validDirections.contains("Go North"))
-                {
-                    rx = rx.getNorth();
-                }
-                else
-                {
-                    input = 1;
-                }
-            }
-            if (input == 1)
-            {
-                if(validDirections.contains("Go South"))
-                {
-                    rx = rx.getSouth();
-                }
-                else
-                {
-                    input = 2;
-                }
-            }            
-            if (input == 2)
-            {
-                if(validDirections.contains("Go East"))
-                {
-                    rx = rx.getEast();
-                }
-                else
-                {
-                    input = 3;
-                }
-            }            
-            if (input == 3)
-            {
-                if(validDirections.contains("Go West"))
-                {
-                    rx = rx.getWest();
-                }
-                else
-                {
-                    input = 1;
-                }
-            }
+        switch(validDirections1.get(input)){
+            case NORTH:  rx = rx.getNorth(); break;
+            case SOUTH: rx = rx.getSouth(); break;
+            case EAST: rx = rx.getEast(); break;
+            case WEST: rx = rx.getWest(); break;
+            default: //ignore
+        }
             validDirections.clear();
     }
     
@@ -202,7 +170,7 @@ public class Game
     {
         if (rx.equals(rooms.get(7)))
         {
-            System.out.println(rooms.get(2).getDescription());
+            System.out.println(rooms.get(7).getDescription());
             System.out.println("\n(╯°□°）╯︵ ┻━┻");
             System.out.println("\nPress F6 to play again!");
             System.out.println("\n┬─┬﻿ ノ( ゜-゜ノ)\n");
@@ -215,19 +183,19 @@ public class Game
         
         if (!(rx.getNorth() == null)) 
         {
-            validDirections.add("Go North");
+            validDirections.add(NORTH);
         }
         if (!(rx.getSouth() == null)) 
         {
-            validDirections.add("Go South");
+            validDirections.add(SOUTH);
         }
         if (!(rx.getEast() == null)) 
         {
-            validDirections.add("Go East");
+            validDirections.add(EAST);
         }
         if (!(rx.getWest() == null)) 
         {
-            validDirections.add("Go West");
+            validDirections.add(WEST);
         }
         
     }
