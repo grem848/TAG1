@@ -41,9 +41,11 @@ public class Game
     private void newRoom() 
     {
         // Room 0
-        rooms.add(new Room("\n*Mansion Entrance*\nThe entrance is a small dark room with a locked door to the south."));
-        // Room 1
-        rooms.add(new Room("\n*Entrance Hall*\nThe entrance hall is so big you can fit 1000 pigs in it.\n"
+        rooms.add(new Room("\n********************\n* Mansion Entrance *\n********************\n"
+                + "The entrance is a small dark room with a locked door to the south."));
+        // Room 1             
+        rooms.add(new Room("\n*****************\n* Entrance Hall *\n*****************\n"
+                + "The entrance hall is so big you can fit 1000 pigs in it.\n"
                 + "The black stone walls used to be lit with torches that burned out years ago,\n"
                 + "and the ceiling is covered in spider web"));
         // Room 2
@@ -52,9 +54,9 @@ public class Game
         // Room 3
         rooms.add(new Room("\n*The Dining Room*\nThe dining room had once been an impressive dining room\n"
                 + "but years of neglect had taken its toll on the interior."
-                + "In the middle of the room stands a long oak tablesome of the food was still on table."));
+                + "In the middle of the room stands a long oak table,\nthe table is still set, but the tableware is completely covered in dust"));
         // Room 4
-        rooms.add(new Room("4The basement was barely more than crawl space,"
+        rooms.add(new Room("\n*The Basement*\nThe basement was barely more than crawl space,"
                 + " you had to hang your head low just to walk in there. There was a crul stench of death."));
         // Room 5
         rooms.add(new Room("5the kitchen  was a very dark room, the only thing"
