@@ -8,9 +8,9 @@ public class Game
 {
         Player player;
         Room rx = null; // Current room
-        ArrayList<Room> rooms = new ArrayList<>();
         TextIO io = new TextIO(new SysTextIO());
-        ArrayList<String> validDirections = new ArrayList<>(4);
+        ArrayList<Room> rooms = new ArrayList<>();
+        ArrayList<String> validDirections = new ArrayList<>();
         public static final String NORTH = "Go North";
         public static final String SOUTH = "Go South";
         public static final String EAST = "Go East";
@@ -19,21 +19,18 @@ public class Game
         
     public Game() 
     {
-
-
-        io.put("Indtast navn");
+        io.put("\n***********************\n* The Haunted Mansion *\n***********************\n\n");
+        io.put("Type in your name:");
         String name = io.get();
         System.out.println(name);
 
-        io.put("Indtast køn");
+        io.put("Type in your gender:");
         String gender = io.get();
         System.out.println(gender);
         player = new Player(name, gender);
 
         newRoom();
-
         setDirections();
-
         rx = rooms.get(0);
         play();
     }
@@ -41,50 +38,87 @@ public class Game
     private void newRoom() 
     {
         // Room 0
-        rooms.add(new Room("\n********************\n* Mansion Entrance *\n********************\n"
-                + "The entrance is a small dark room with a locked door to the south."));
+        rooms.add(new Room("\n********************\n* Mansion Entrance *\n********************\n\n"
+                + "You enter the mansion and step into a small dark room.\n"
+                + "You hear the door close behind you, then you hear a loud\n"
+                + "*CLICK*\n"
+                + "The door you came from is now locked."));
         // Room 1             
-        rooms.add(new Room("\n*****************\n* Entrance Hall *\n*****************\n"
-                + "The entrance hall is so big you can fit 1000 pigs in it.\n"
-                + "The black stone walls used to be lit with torches that burned out years ago,\n"
-                + "and the ceiling is covered in spider web"));
+        rooms.add(new Room("\n*****************\n* Entrance Hall *\n*****************\n\n"
+                + "The entrance hall is so big you could fit 100 people in it.\n"
+                + "The black stone walls used to be lit with torches, but\n"
+                + "it looks like they all burned out years ago.\n"
+                + "The corners of the entrance hall are covered in spider web."));
         // Room 2
-        rooms.add(new Room("\n*The Eastern Hallway*\nThe eastern hallway is wide and straight like the old canal that cuts through the nearby city.\n"
-                + "The hallway is filled with paintings with faded and crackled images,\n it is almost impossible to make out what they used to portray."));
+        rooms.add(new Room("\n*******************\n* Eastern Hallway *\n*******************\n\n"
+                + "The eastern hallway is wide like the river\n"
+                + "that cuts through the landscape outside the mansion.\n"
+                + "The hallway walls are filled with paintings of faded\n"
+                + "and crackled images, it is almost impossible to make out\n"
+                + "what the paintings used to portray."));
         // Room 3
-        rooms.add(new Room("\n*The Dining Room*\nThe dining room had once been an impressive dining room\n"
-                + "but years of neglect had taken its toll on the interior."
-                + "In the middle of the room stands a long oak table,\nthe table is still set, but the tableware is completely covered in dust"));
+        rooms.add(new Room("\n***************\n* Dining Room *\n***************\n\n"
+                + "The dining room seems to have been an impressive dining room once\n"
+                + "but years of neglect have taken its toll on the interior.\n"
+                + "In the middle of the room stands a long oak table,\n"
+                + "the table is set but the tableware is completely covered in dust"));
         // Room 4
-        rooms.add(new Room("\n*The Basement*\nThe basement was barely more than crawl space,"
-                + " you had to hang your head low just to walk in there. There was a crul stench of death."));
+        rooms.add(new Room("\n************\n* Basement *\n************\n\n"
+                + "A dense cruel stench of death fills the air, as the creaks door opens.\n"
+                + "The basement is barely more than a crawl space,\n"
+                + "you have to bow your head down just to walk in there."));
         // Room 5
-        rooms.add(new Room("5the kitchen  was a very dark room, the only thing"
-                + " visible was the layer of dust on the old kitchen machine. the smell came from the rot mad."));
+        rooms.add(new Room("\n***********\n* Kitchen *\n***********\n\n"
+                + "The kitchen is a very dark room, the only thing visible is\n"
+                + "the thick layer of dust on the old kitchen appliances.\n"
+                + "A foul smell surrounds the old fridge, left opened for\n"
+                + "what looks like many years."));
         // Room 6
-        rooms.add(new Room("6the great hall, was the biggeste room in the house,"
-                + " with a long wooden table and a few old chairs."));
+        rooms.add(new Room("\n**************\n* Great Hall *\n**************\n\n"
+                + "The great hall is the biggest room in the mansion.\n"
+                + "Built into the northern wall is a huge decorated fireplace.\n"));
         // Room 7
-        rooms.add(new Room("7You have found the treasure, congratulations!\n"));
+        rooms.add(new Room("\n***************\n* Trophy Room *\n***************\n\n"
+                + "The walls in the trophy room are full of hunting trophies.\n"
+                + "In the southern end of the room there is a table\n"
+                + "with a small crimson container on it.\n"
+                + "You open the container and you find a small golden statue!\n"
+                + "\n+++++++++++++++++++++++++++++++++++++++++++++++++\n"
+                + "*************************************************\n"
+                + "* YOU HAVE FOUND THE TREASURE, CONGRATULATIONS! *\n"
+                + "*************************************************\n"
+                + "+++++++++++++++++++++++++++++++++++++++++++++++++"));
         // Room 8
-        rooms.add(new Room("8the library was probely the oldest thing in the hole house."
-                + " the books were imposible to read probely becauseof the age? or maybe something else?"));
+        rooms.add(new Room("\n***********\n* Library *\n***********\n\n"
+                + "The library looks like it's the oldest room in the mansion.\n"
+                + "A few books and pages lies scattered across the floor.\n"));
         // Room 9
-        rooms.add(new Room("9in the hidden room you not could have believed it if not for all of the blood."
-                + " How can so much blood come from one body? The skin told of a messy story...."));
+        rooms.add(new Room("\n***************\n* Hidden Room *\n***************\n\n"
+                + "As you enter the hidden room you step in something sticky\n"
+                + "You examine the sticky substance and soon you realize\n"
+                + "that it's a pool of blood and guts!\n"
+                + "What could have made this mess?"));
         // Room 10
-        rooms.add(new Room("10in the bedroom stood a big bed, with a lot of dust, the last"
-                + " one who had slept there was probably a spider."));
+        rooms.add(new Room("\n***********\n* Bedroom *\n***********\n\n"
+                + "In the bedroom stands a large bed full of dust\n"
+                + "the last thing that slept there was probably a spider."));
         // Room 11
-        rooms.add(new Room("11the storage room was filled with old wooden boxes God knows what was in."));
+        rooms.add(new Room("\n****************\n* Storage Room *\n****************\n\n"
+                + "The storage room is full of old crates and barrels.\n"
+                + "You begin to wonder what they might contain."));
         // Room 12
-        rooms.add(new Room("12the outside was cold and dark with a faul mood in the air."));
+        rooms.add(new Room("\n**********\n* Garden *\n**********\n\n"
+                + "The garden is a cold and dark place.\n"
+                + "The gardens edge is guarded by a tall fence, leaving you no escape.\n"
+                + "The atmosphere has an eerie feeling."));
         // Room 13
-        rooms.add(new Room("13the laboratory was equipped with old sophisticated tools of old science,"
-                + " the things that could have happenden here , was indescribably..."));
+        rooms.add(new Room("\n**************\n* Laboratory *\n**************\n\n"
+                + "The laboratory is equipped with old sophisticated tools\n"
+                + "and shelfs full of jars with dead rats inside a greenish liquid."));
         // Room 14        
-        rooms.add(new Room("14The hallway is narrow, and has as much personality"
-                + " as the rest of the house, the floor  is slate grey and the walls."));
+        rooms.add(new Room("\n*******************\n* Western Hallway *\n*******************\n\n"
+                + "The western hallway is narrow with a floor of slate grey tiles\n"
+                + "and walls of the same colour.\n"));
     }
     private void setDirections() 
     {
@@ -157,7 +191,6 @@ public class Game
 
     private void goToRoom(int input, ArrayList<String> validDirections1)  
     {
-        // input++;
         switch(validDirections1.get(input)){
             case NORTH:  rx = rx.getNorth(); break;
             case SOUTH: rx = rx.getSouth(); break;
@@ -202,10 +235,4 @@ public class Game
         
     }
 
-//    System.out.println(name + ", " + "ow you hit a wall!");
-//    
-//    if (!(System.in == Arrays.asList(0)))
-//    {
-//        System.out.println(name + ", " + "ow you hit a wall!");
-//    }
 }
