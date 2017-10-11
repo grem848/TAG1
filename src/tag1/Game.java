@@ -25,18 +25,79 @@ public class Game
         System.out.println(gender);
         player = new Player(name, gender);
 
-        rooms.add(new Room("Entrance \nA long hallway, the door behind you is locked.\nThere is a door to the North."));
-        rooms.add(new Room("A room with a painting"));
-        rooms.add(new Room("Winner winner chicken dinner!\nYou found the treasure room and won the game!"));
+        newRoom();
 
-        rooms.get(0).setNorth(rooms.get(1));
-        rooms.get(1).setSouth(rooms.get(0));
-        rooms.get(1).setNorth(rooms.get(2));
-        rooms.get(2).setSouth(rooms.get(1));
+        setDirections();
 
         rx = rooms.get(0);
         play();
     }
+    
+    private void newRoom() 
+    {
+        // Room 0
+        rooms.add(new Room("Entrance \nA long hallway, the door behind you is locked.\nThere is a door to the North."));
+        // Room 1
+        rooms.add(new Room("A room with a painting"));
+        // Room 2
+        rooms.add(new Room("Winner winner chicken dinner!\nYou found the treasure room and won the game!"));
+    }
+    private void setDirections() 
+    {
+        // Room 0
+        rooms.get(0).setNorth(rooms.get(1));
+        // Room 1
+        rooms.get(1).setSouth(rooms.get(0));
+        rooms.get(1).setEast(rooms.get(2));
+        rooms.get(1).setWest(rooms.get(?));
+        // Room 2
+        rooms.get(2).setNorth(rooms.get(3));
+        rooms.get(2).setWest(rooms.get(1));
+        // Room 3
+        rooms.get(3).setNorth(rooms.get(5));
+        rooms.get(3).setSouth(rooms.get(2));
+        rooms.get(3).setEast(rooms.get(4));
+        // Room 4
+        rooms.get(4).setWest(rooms.get(3));
+        // Room 5
+        rooms.get(5).setSouth(rooms.get(3));
+        rooms.get(5).setWest(rooms.get(6));
+        // Room 6
+        rooms.get(6).setSouth(rooms.get(7));
+        rooms.get(6).setEast(rooms.get(5));
+        rooms.get(6).setWest(rooms.get(8));
+        // Room 7
+        rooms.get(7).setNorth(rooms.get(6));
+        // Room 8
+        rooms.get(8).setNorth(rooms.get(9));        
+        rooms.get(8).setSouth(rooms.get(10));        
+        rooms.get(8).setEast(rooms.get(6));
+        // Room 9      
+        rooms.get(9).setSouth(rooms.get(8));
+        // Room 10
+        rooms.get(10).setNorth(rooms.get(8));        
+        rooms.get(10).setSouth(rooms.get(14));        
+        rooms.get(10).setWest(rooms.get(11));
+        // Room 11       
+        rooms.get(11).setSouth(rooms.get(12));        
+        rooms.get(11).setEast(rooms.get(10));
+        // Room 12
+        rooms.get(12).setNorth(rooms.get(11));        
+        rooms.get(12).setSouth(rooms.get(13));        
+        rooms.get(12).setEast(rooms.get(14));
+        // Room 13
+        rooms.get(13).setNorth(rooms.get(12));                      
+        // Room 14
+        rooms.get(14).setNorth(rooms.get(10));             
+        rooms.get(14).setEast(rooms.get(1));
+        rooms.get(14).setWest(rooms.get(12));
+        
+        
+        
+        
+    }
+
+
     
     public void play()
     {
