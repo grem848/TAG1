@@ -46,33 +46,29 @@ public class Game
             getValidDirections();
             int select = io.select("\n\nPick a direction to go\n", validDirections, "");
             System.out.println(select);
-            goToRoom(); // New
+            goToRoom(select); // New
             chickenDinner(); // New
         }
         
     }
 
 
-    private void goToRoom() 
+    private void goToRoom(int input) 
     { // New Method
         
-            /* io.select.nextInt().equals(0)
-             change validDirections.get(0).equals("Go ...") to the the next console out
-             = 1 for north, 2 for south, 3 for east, 4 for west
-            */
-            if (System.console().readLine().equals(0)) // wrong
+            if (input == 0)
             {
                 rx = rx.getNorth();
             }
-            if (System.console().readLine().equals(1)) // wrong
+            if (input == 1)
             {
                 rx = rx.getSouth();
             }            
-            if (validDirections.get(0).equals("Go East")) // wrong
+            if (input == 2)
             {
                 rx = rx.getEast();
             }            
-            if (validDirections.get(0).equals("Go West")) // wrong
+            if (input == 3)
             {
                 rx = rx.getWest();
             }
