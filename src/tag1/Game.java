@@ -45,7 +45,7 @@ public class Game
                 + "The door you came from is now locked."));
         // Room 1             
         rooms.add(new Room("\n*****************\n* Entrance Hall *\n*****************\n\n"
-                + "The entrance hall is so big you could fit 100 people in it.\n"
+                + "The entrance hall is so big you could fit 1000 pigs in it.\n"
                 + "The black stone walls used to be lit with torches, but\n"
                 + "it looks like they all burned out years ago.\n"
                 + "The corners of the entrance hall are covered in spider web."));
