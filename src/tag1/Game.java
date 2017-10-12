@@ -182,14 +182,14 @@ public class Game
             getValidDirections();
             int select = io.select("\n\nPick a direction to go\n", validDirections, "");
             System.out.println(select);
-            goToRoom(select, validDirections);
-            chickenDinner();
+            setCurrentRoom(select, validDirections);
+            winGame();
         }
         
     }
 
 
-    private void goToRoom(int input, ArrayList<String> validDirections1)  
+    private void setCurrentRoom(int input, ArrayList<String> validDirections1)  
     {
         switch(validDirections1.get(input)){
             case NORTH:  rx = rx.getNorth(); break;
@@ -201,7 +201,7 @@ public class Game
             validDirections.clear();
     }
     
-    private void chickenDinner() 
+    private void winGame() 
     {
         if (rx.equals(rooms.get(7)))
         {
