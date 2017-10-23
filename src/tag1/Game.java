@@ -10,24 +10,29 @@ public class Game
         Room rx = null; // Current room
         TextIO io = new TextIO(new SysTextIO());
         ArrayList<Room> rooms = new ArrayList<>();
-        ArrayList<String> validDirections = new ArrayList<>();
+        ArrayList<String> validOptions = new ArrayList<>();
         public static final String NORTH = "Go North";
         public static final String SOUTH = "Go South";
         public static final String EAST = "Go East";
         public static final String WEST = "Go West";
+        public static final String SEARCH = "Search Room";
+        public static final String INVENTORY = "Inventory";
+        public static final String QUIT = "Quit Game";
+        
         
         
     public Game() 
     {
         io.put("\n***********************\n* The Haunted Mansion *\n***********************\n\n");
-        io.put("Type in your name:");
-        String name = io.get();
-        System.out.println(name);
+        io.put("Type in your first name:");
+        String firstName = io.get();
+        io.put(firstName + "\n");
 
-        io.put("Type in your gender:");
-        String gender = io.get();
-        System.out.println(gender);
-        player = new Player(name, gender);
+        io.put("Type in your last name:");
+        String lastName = io.get();
+        io.put(lastName + "\n");
+        player = new Player(firstName, lastName);
+        // hotdogsen = godmode
 
         newRoom();
         setDirections();
@@ -178,11 +183,12 @@ public class Game
     {
         while(!rx.equals(rooms.get(7)))
         {
+            io.put("\n" + player.getFirstName() + " " + player.getLastName() + "\nHP:" +player.getHealth() + "\n");
             io.put(rx.getDescription());
-            getValidDirections();
-            int select = io.select("\n\nPick a direction to go\n", validDirections, "");
-            System.out.println(select);
-            setCurrentRoom(select, validDirections);
+            getOptions();
+            int select = io.select("\n\nPick a direction to go\n", validOptions, "");
+            io.put(Integer.toString(select));
+            setCurrentRoom(select, validOptions);
             winGame();
         }
         
@@ -192,47 +198,52 @@ public class Game
     private void setCurrentRoom(int input, ArrayList<String> validDirections1)  
     {
         switch(validDirections1.get(input)){
-            case NORTH:  rx = rx.getNorth(); break;
+            case NORTH: rx = rx.getNorth(); break;
             case SOUTH: rx = rx.getSouth(); break;
             case EAST: rx = rx.getEast(); break;
             case WEST: rx = rx.getWest(); break;
+            case QUIT: System.exit(99); break;
+            case SEARCH: System.out.println("\nYou found nothing"); break;
+            case INVENTORY: player.getInventory(); break;
             default: //ignore
         }
-            validDirections.clear();
+            validOptions.clear();
     }
     
     private void winGame() 
     {
         if (rx.equals(rooms.get(7)))
         {
-            System.out.println(rooms.get(7).getDescription());
-            System.out.println("\n(╯°□°）╯︵ ┻━┻");
-            System.out.println("\nPress F6 to play again!");
-            System.out.println("\n┬─┬﻿ ノ( ゜-゜ノ)\n");
+            io.put(rooms.get(7).getDescription()
+                    +"\n(╯°□°）╯︵ ┻━┻"
+                    +"\nPress F6 to play again!"
+                    +"\n┬─┬﻿ ノ( ゜-゜ノ)\n");
         }
         
     }            
             
-    private void getValidDirections() 
+    private void getOptions() 
     {
         
         if (!(rx.getNorth() == null)) 
         {
-            validDirections.add(NORTH);
+            validOptions.add(NORTH);
         }
         if (!(rx.getSouth() == null)) 
         {
-            validDirections.add(SOUTH);
+            validOptions.add(SOUTH);
         }
         if (!(rx.getEast() == null)) 
         {
-            validDirections.add(EAST);
+            validOptions.add(EAST);
         }
         if (!(rx.getWest() == null)) 
         {
-            validDirections.add(WEST);
+            validOptions.add(WEST);
         }
-        
+        validOptions.add(SEARCH);
+        validOptions.add(INVENTORY);
+        validOptions.add(QUIT);        
     }
 
 }

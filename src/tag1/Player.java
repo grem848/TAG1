@@ -1,31 +1,43 @@
 
 package tag1;
 
+import java.util.ArrayList;
+
 public class Player 
 {
-    private String name;
-    private String gender;
-    
-    public Player(String name, String gender) {
-        this.name = name;
-        this.gender = gender;
+    private String firstName;
+    private String lastName;
+    private int health;
+    private ArrayList<String> inventory;
+
+    public ArrayList<String> getInventory() {
+        return inventory;
     }
 
-
-    public String getName() {
-        return name;
+    public void setInventory(ArrayList<String> inventory) {
+        this.inventory = inventory;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setHealth(int health) {
+        this.health = health;
     }
 
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
+    public int getHealth() {
+        return health;
     }
     
+    public Player(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.health = 100;
+        this.inventory = new ArrayList<>();
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
 }
