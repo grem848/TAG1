@@ -250,11 +250,12 @@ public class Game
         validOptions.add(QUIT);        
     }
     public void highScore() throws FileNotFoundException, IOException, ClassNotFoundException {
+        // create and add new players name to the highscore txt file
         try 
         {
-            FileOutputStream f = new FileOutputStream(new File("Highscore.txt"));
+            FileOutputStream f = new FileOutputStream(new File("Highscore.txt"), true);
+        // true adds text at the end of txt file and doesnt override
             ObjectOutputStream o = new ObjectOutputStream(f);
-            
             o.writeObject(player);          
         }
         catch (FileNotFoundException e) 
@@ -265,7 +266,8 @@ public class Game
         {
             System.out.println("\nError can not be written!");
         }
-
+        
+        // read object file
         try {
             File highscore = new File("C:\\Users\\Andreas Heick Laptop\\Documents\\NetBeansProjects\\TAG1\\Highscore.txt");
             FileInputStream fi = new FileInputStream(highscore);
