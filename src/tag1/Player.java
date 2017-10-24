@@ -1,9 +1,10 @@
 
 package tag1;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Player 
+public class Player implements Serializable
 {
     private String firstName;
     private String lastName;
@@ -40,4 +41,9 @@ public class Player
     public String getLastName() {
         return lastName;
     }
+    @Override
+    public String toString()
+    {
+    return "\n\n*HIGH SCORE LIST*\n" + firstName + " "+ lastName + " gold here" + "\n*****************\n\n";
+    }           
 }

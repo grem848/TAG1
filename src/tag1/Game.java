@@ -1,5 +1,6 @@
 package tag1;
 
+import java.io.*;
 import java.util.ArrayList;
 import textio.SysTextIO;
 import textio.*;
@@ -17,11 +18,12 @@ public class Game
         public static final String WEST = "Go West";
         public static final String SEARCH = "Search Room";
         public static final String INVENTORY = "Inventory";
+        public static final String HIGHSCORE = "High Score";
         public static final String QUIT = "Quit Game";
         
         
         
-    public Game() 
+    public Game() throws IOException, ClassNotFoundException 
     {
         io.put("\n***********************\n* The Haunted Mansion *\n***********************\n\n");
         io.put("Type in your first name:");
@@ -179,11 +181,11 @@ public class Game
 
 
     
-    public void play()
+    public void play() throws IOException, ClassNotFoundException
     {
         while(!rx.equals(rooms.get(7)))
         {
-            io.put("\n" + player.getFirstName() + " " + player.getLastName() + "\nHP:" +player.getHealth() + "\n");
+            io.put("\nPlayer:" + player.getFirstName() + " " + player.getLastName() + "\nHP:" +player.getHealth() + "\n");
             io.put(rx.getDescription());
             getOptions();
             int select = io.select("\n\nPick a direction to go\n", validOptions, "");
@@ -195,16 +197,17 @@ public class Game
     }
 
 
-    private void setCurrentRoom(int input, ArrayList<String> validDirections1)  
+    private void setCurrentRoom(int input, ArrayList<String> validDirections1) throws IOException, ClassNotFoundException  
     {
         switch(validDirections1.get(input)){
             case NORTH: rx = rx.getNorth(); break;
             case SOUTH: rx = rx.getSouth(); break;
             case EAST: rx = rx.getEast(); break;
             case WEST: rx = rx.getWest(); break;
-            case QUIT: System.exit(99); break;
+            case QUIT: System.exit(0); break;
             case SEARCH: System.out.println("\nYou found nothing"); break;
             case INVENTORY: player.getInventory(); break;
+            case HIGHSCORE: highScore(); break;
             default: //ignore
         }
             validOptions.clear();
@@ -243,7 +246,37 @@ public class Game
         }
         validOptions.add(SEARCH);
         validOptions.add(INVENTORY);
+        validOptions.add(HIGHSCORE);
         validOptions.add(QUIT);        
     }
+    public void highScore() throws FileNotFoundException, IOException, ClassNotFoundException {
+        try 
+        {
+            FileOutputStream f = new FileOutputStream(new File("Highscore.txt"));
+            ObjectOutputStream o = new ObjectOutputStream(f);
+            
+            o.writeObject(player);          
+        }
+        catch (FileNotFoundException e) 
+        {
+            System.out.println("\nError file not found!");
+        } 
+        catch (IOException e) 
+        {
+            System.out.println("\nError can not be written!");
+        }
 
+        try {
+            File highscore = new File("C:\\Users\\Andreas Heick Laptop\\Documents\\NetBeansProjects\\TAG1\\Highscore.txt");
+            FileInputStream fi = new FileInputStream(highscore);
+            ObjectInputStream oi = new ObjectInputStream(fi);
+            Player player1 = (Player) oi.readObject();
+            io.put(player1.toString());
+            
+        } catch (FileNotFoundException ex) {
+            System.out.println("\nError file not found!");
+        } catch (IOException ex) {
+            System.out.println("\nError file not read!");
+        }
+    } 
 }
