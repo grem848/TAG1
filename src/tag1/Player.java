@@ -10,6 +10,9 @@ public class Player implements Serializable
     private String lastName;
     private int health;
     private ArrayList<String> inventory;
+    ArrayList<Player> players;
+    
+    
 
     public ArrayList<String> getInventory() {
         return inventory;
@@ -41,9 +44,10 @@ public class Player implements Serializable
     public String getLastName() {
         return lastName;
     }
+
     @Override
-    public String toString()
-    {
-    return "\n\n*HIGH SCORE LIST*\n" + firstName + " "+ lastName + " gold here" + "\n*****************\n\n";
-    }           
+    public String toString() {
+        return"First Name: " + firstName + ", Last Name: " + lastName + ", Health: " + health + ", Inventory: " + inventory + "\n";
+    }
+    
 }

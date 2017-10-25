@@ -2,16 +2,21 @@ package tag1;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import textio.SysTextIO;
 import textio.*;
 
 public class Game 
 {
-        Player player;
+    public static final boolean DEBUG = true; // false when game is done
         Room rx = null; // Current room
         TextIO io = new TextIO(new SysTextIO());
         ArrayList<Room> rooms = new ArrayList<>();
         ArrayList<String> validOptions = new ArrayList<>();
+        ArrayList<Player> players = null;
+        Player player;        
+        File highscore = new File("Players.txt");
         public static final String NORTH = "Go North";
         public static final String SOUTH = "Go South";
         public static final String EAST = "Go East";
@@ -25,15 +30,8 @@ public class Game
         
     public Game() throws IOException, ClassNotFoundException 
     {
-        io.put("\n***********************\n* The Haunted Mansion *\n***********************\n\n");
-        io.put("Type in your first name:");
-        String firstName = io.get();
-        io.put(firstName + "\n");
-
-        io.put("Type in your last name:");
-        String lastName = io.get();
-        io.put(lastName + "\n");
-        player = new Player(firstName, lastName);
+        io.put("\n***********************\n* The Haunted Mansion *\n***********************\n\n");     
+        makePlayers();
         // hotdogsen = godmode
 
         newRoom();
@@ -42,6 +40,66 @@ public class Game
         play();
     }
     
+    public void makePlayers() throws IOException
+    {
+         
+        try {
+            FileInputStream fi = new FileInputStream(highscore);
+            ObjectInputStream oi = new ObjectInputStream(fi);
+            players = (ArrayList<Player>) oi.readObject();
+            if(players == null) players = new ArrayList<>();
+            io.put("Type in your first name:");
+            String firstName = io.get();
+            io.put(firstName + "\n");
+
+            io.put("Type in your last name:");
+            String lastName = io.get();
+            io.put(lastName + "\n");
+            player = new Player(firstName, lastName);
+            players.add(player);
+            io.put("\n\n*HIGH SCORE LIST*\n");
+            System.out.println(players);
+            io.put("\n*****************\n\n");    
+        } 
+        catch (FileNotFoundException ex) 
+        {
+            io.put("\nError file not found!");
+            if(DEBUG) ex.printStackTrace();
+        } 
+        catch (IOException ex) 
+        {
+            io.put("\nError file not read!");
+            if(DEBUG) ex.printStackTrace();
+        }   
+        catch (ClassNotFoundException ex) {
+            io.put("\nError class not found!");
+            if(DEBUG) ex.printStackTrace();
+        }
+        
+        // players.clear(); // Use to clear highscore list
+        
+    }
+
+    private void savePlayers(File highscore) {                
+        try {
+            FileOutputStream f = new FileOutputStream(highscore);
+            ObjectOutputStream o = new ObjectOutputStream(f);
+            o.writeObject(players);
+            o.flush();
+            f.flush();
+            o.close();
+            f.close();
+        } catch (FileNotFoundException e) {
+            io.put("\nError file not found!");
+        } catch (IOException e) {
+            io.put("\nError can not be written!");
+        } 
+    }
+    private void getPlayerStats()
+    {
+        io.put("\nPlayer:" + player.getFirstName() + " " + player.getLastName() + "\nHP:" +player.getHealth() + "\n");  
+    }
+
     private void newRoom() 
     {
         // Room 0
@@ -180,18 +238,18 @@ public class Game
     }
 
 
-    
     public void play() throws IOException, ClassNotFoundException
     {
         while(!rx.equals(rooms.get(7)))
         {
-            io.put("\nPlayer:" + player.getFirstName() + " " + player.getLastName() + "\nHP:" +player.getHealth() + "\n");
+            getPlayerStats();
             io.put(rx.getDescription());
             getOptions();
             int select = io.select("\n\nPick a direction to go\n", validOptions, "");
             io.put(Integer.toString(select));
             setCurrentRoom(select, validOptions);
             winGame();
+            savePlayers(highscore);
         }
         
     }
@@ -206,8 +264,7 @@ public class Game
             case WEST: rx = rx.getWest(); break;
             case QUIT: System.exit(0); break;
             case SEARCH: System.out.println("\nYou found nothing"); break;
-            case INVENTORY: player.getInventory(); break;
-            case HIGHSCORE: highScore(); break;
+//            case INVENTORY: player.getInventory(); break;
             default: //ignore
         }
             validOptions.clear();
@@ -224,7 +281,7 @@ public class Game
         }
         
     }            
-            
+    
     private void getOptions() 
     {
         
@@ -246,39 +303,7 @@ public class Game
         }
         validOptions.add(SEARCH);
         validOptions.add(INVENTORY);
-        validOptions.add(HIGHSCORE);
         validOptions.add(QUIT);        
     }
-    public void highScore() throws FileNotFoundException, IOException, ClassNotFoundException {
-        // create and add new players name to the highscore txt file
-        try 
-        {
-            FileOutputStream f = new FileOutputStream(new File("Highscore.txt"), true);
-        // true adds text at the end of txt file and doesnt override
-            ObjectOutputStream o = new ObjectOutputStream(f);
-            o.writeObject(player);          
-        }
-        catch (FileNotFoundException e) 
-        {
-            System.out.println("\nError file not found!");
-        } 
-        catch (IOException e) 
-        {
-            System.out.println("\nError can not be written!");
-        }
-        
-        // read object file
-        try {
-            File highscore = new File("C:\\Users\\Andreas Heick Laptop\\Documents\\NetBeansProjects\\TAG1\\Highscore.txt");
-            FileInputStream fi = new FileInputStream(highscore);
-            ObjectInputStream oi = new ObjectInputStream(fi);
-            Player player1 = (Player) oi.readObject();
-            io.put(player1.toString());
-            
-        } catch (FileNotFoundException ex) {
-            System.out.println("\nError file not found!");
-        } catch (IOException ex) {
-            System.out.println("\nError file not read!");
-        }
-    } 
 }
+
