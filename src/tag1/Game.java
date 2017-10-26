@@ -2,35 +2,32 @@ package tag1;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import textio.SysTextIO;
 import textio.*;
 
-public class Game 
+public class Game
 {
+
     public static final boolean DEBUG = true; // false when game is done
-        Room rx = null; // Current room
-        TextIO io = new TextIO(new SysTextIO());
-        ArrayList<Room> rooms = new ArrayList<>();
-        ArrayList<String> validOptions = new ArrayList<>();
-        ArrayList<Player> players = null;
-        Player player;        
-        File highscore = new File("Players.txt");
-        public static final String NORTH = "Go North";
-        public static final String SOUTH = "Go South";
-        public static final String EAST = "Go East";
-        public static final String WEST = "Go West";
-        public static final String SEARCH = "Search Room";
-        public static final String INVENTORY = "Inventory";
-        public static final String HIGHSCORE = "High Score";
-        public static final String QUIT = "Quit Game";
-        
-        
-        
-    public Game() throws IOException, ClassNotFoundException 
+    Room rx = null; // Current room
+    TextIO io = new TextIO(new SysTextIO());
+    ArrayList<Room> rooms = new ArrayList<>();
+    ArrayList<String> validOptions = new ArrayList<>();
+    ArrayList<Player> players = null;
+    Player player;
+    File highscore = new File("Players.txt");
+    public static final String NORTH = "Go North";
+    public static final String SOUTH = "Go South";
+    public static final String EAST = "Go East";
+    public static final String WEST = "Go West";
+    public static final String SEARCH = "Search Room";
+    public static final String INVENTORY = "Inventory";
+    public static final String HIGHSCORE = "High Score";
+    public static final String QUIT = "Quit Game";
+
+    public Game() throws IOException, ClassNotFoundException
     {
-        io.put("\n***********************\n* The Haunted Mansion *\n***********************\n\n");     
+        io.put("\n***********************\n* The Haunted Mansion *\n***********************\n\n");
         makePlayers();
         // hotdogsen = godmode
 
@@ -39,15 +36,33 @@ public class Game
         rx = rooms.get(0);
         play();
     }
-    
-    public void makePlayers() throws IOException
+    public void play() throws IOException, ClassNotFoundException
     {
-         
-        try {
+        while (!rx.equals(rooms.get(7)))
+        {
+            getPlayerStats();
+            io.put(rx.getDescription());
+            getOptions();
+            int select = io.select("\n\nPick a direction to go\n", validOptions, "");
+            io.put(Integer.toString(select));
+            setCurrentRoom(select, validOptions);
+            winGame();
+            savePlayers(highscore);
+        }
+
+    }
+    private void makePlayers() throws IOException
+    {
+
+        try
+        {
             FileInputStream fi = new FileInputStream(highscore);
             ObjectInputStream oi = new ObjectInputStream(fi);
             players = (ArrayList<Player>) oi.readObject();
-            if(players == null) players = new ArrayList<>();
+            if (players == null)
+            {
+                players = new ArrayList<>();
+            }
             io.put("Type in your first name:");
             String firstName = io.get();
             io.put(firstName + "\n");
@@ -57,31 +72,40 @@ public class Game
             io.put(lastName + "\n");
             player = new Player(firstName, lastName);
             players.add(player);
-            io.put("\n\n*HIGH SCORE LIST*\n");
+            io.put("\n\n*******HIGH SCORE LIST*******\n");
             System.out.println(players);
-            io.put("\n*****************\n\n");    
-        } 
-        catch (FileNotFoundException ex) 
+            io.put("\nSCROLL UP FOR HIGH SCORE LIST!\n*****************************\n\n");
+            
+        } catch (FileNotFoundException ex)
         {
             io.put("\nError file not found!");
-            if(DEBUG) ex.printStackTrace();
-        } 
-        catch (IOException ex) 
+            if (DEBUG)
+            {
+                ex.printStackTrace();
+            }
+        } catch (IOException ex)
         {
             io.put("\nError file not read!");
-            if(DEBUG) ex.printStackTrace();
-        }   
-        catch (ClassNotFoundException ex) {
+            if (DEBUG)
+            {
+                ex.printStackTrace();
+            }
+        } catch (ClassNotFoundException ex)
+        {
             io.put("\nError class not found!");
-            if(DEBUG) ex.printStackTrace();
+            if (DEBUG)
+            {
+                ex.printStackTrace();
+            }
         }
-        
+
         // players.clear(); // Use to clear highscore list
-        
     }
 
-    private void savePlayers(File highscore) {                
-        try {
+    private void savePlayers(File highscore)
+    {
+        try
+        {
             FileOutputStream f = new FileOutputStream(highscore);
             ObjectOutputStream o = new ObjectOutputStream(f);
             o.writeObject(players);
@@ -89,18 +113,21 @@ public class Game
             f.flush();
             o.close();
             f.close();
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e)
+        {
             io.put("\nError file not found!");
-        } catch (IOException e) {
+        } catch (IOException e)
+        {
             io.put("\nError can not be written!");
-        } 
-    }
-    private void getPlayerStats()
-    {
-        io.put("\nPlayer:" + player.getFirstName() + " " + player.getLastName() + "\nHP:" +player.getHealth() + "\n");  
+        }
     }
 
-    private void newRoom() 
+    private void getPlayerStats()
+    {
+        io.put("\nPlayer:" + player.getFirstName() + " " + player.getLastName() + "\nHP:" + player.getHealth() + "\n");
+    }
+
+    private void newRoom()
     {
         // Room 0
         rooms.add(new Room("\n********************\n* Mansion Entrance *\n********************\n\n"
@@ -185,7 +212,8 @@ public class Game
                 + "The western hallway is narrow with a floor of slate grey tiles\n"
                 + "and walls of the same colour.\n"));
     }
-    private void setDirections() 
+
+    private void setDirections()
     {
         // Room 0
         rooms.get(0).setNorth(rooms.get(1));
@@ -212,98 +240,97 @@ public class Game
         // Room 7
         rooms.get(7).setNorth(rooms.get(6));
         // Room 8
-        rooms.get(8).setNorth(rooms.get(9));        
-        rooms.get(8).setSouth(rooms.get(10));        
+        rooms.get(8).setNorth(rooms.get(9));
+        rooms.get(8).setSouth(rooms.get(10));
         rooms.get(8).setEast(rooms.get(6));
         // Room 9      
         rooms.get(9).setSouth(rooms.get(8));
         // Room 10
-        rooms.get(10).setNorth(rooms.get(8));        
-        rooms.get(10).setSouth(rooms.get(14));        
+        rooms.get(10).setNorth(rooms.get(8));
+        rooms.get(10).setSouth(rooms.get(14));
         rooms.get(10).setWest(rooms.get(11));
         // Room 11       
-        rooms.get(11).setSouth(rooms.get(12));        
+        rooms.get(11).setSouth(rooms.get(12));
         rooms.get(11).setEast(rooms.get(10));
         // Room 12
-        rooms.get(12).setNorth(rooms.get(11));        
-        rooms.get(12).setSouth(rooms.get(13));        
+        rooms.get(12).setNorth(rooms.get(11));
+        rooms.get(12).setSouth(rooms.get(13));
         rooms.get(12).setEast(rooms.get(14));
         // Room 13
-        rooms.get(13).setNorth(rooms.get(12));                      
+        rooms.get(13).setNorth(rooms.get(12));
         // Room 14
-        rooms.get(14).setNorth(rooms.get(10));             
+        rooms.get(14).setNorth(rooms.get(10));
         rooms.get(14).setEast(rooms.get(1));
         rooms.get(14).setWest(rooms.get(12));
-        
+
     }
 
-
-    public void play() throws IOException, ClassNotFoundException
+    private void roomItems()
     {
-        while(!rx.equals(rooms.get(7)))
+        
+    }
+            
+    private void setCurrentRoom(int input, ArrayList<String> validDirections1) throws IOException, ClassNotFoundException
+    {
+        switch (validDirections1.get(input))
         {
-            getPlayerStats();
-            io.put(rx.getDescription());
-            getOptions();
-            int select = io.select("\n\nPick a direction to go\n", validOptions, "");
-            io.put(Integer.toString(select));
-            setCurrentRoom(select, validOptions);
-            winGame();
-            savePlayers(highscore);
-        }
-        
-    }
-
-
-    private void setCurrentRoom(int input, ArrayList<String> validDirections1) throws IOException, ClassNotFoundException  
-    {
-        switch(validDirections1.get(input)){
-            case NORTH: rx = rx.getNorth(); break;
-            case SOUTH: rx = rx.getSouth(); break;
-            case EAST: rx = rx.getEast(); break;
-            case WEST: rx = rx.getWest(); break;
-            case QUIT: System.exit(0); break;
-            case SEARCH: System.out.println("\nYou found nothing"); break;
+            case NORTH:
+                rx = rx.getNorth();
+                break;
+            case SOUTH:
+                rx = rx.getSouth();
+                break;
+            case EAST:
+                rx = rx.getEast();
+                break;
+            case WEST:
+                rx = rx.getWest();
+                break;
+            case QUIT:
+                System.exit(0);
+                break;
+            case SEARCH:
+                System.out.println("\nYou found nothing");
+                break;
 //            case INVENTORY: player.getInventory(); break;
             default: //ignore
         }
-            validOptions.clear();
+        validOptions.clear();
     }
-    
-    private void winGame() 
+
+    private void winGame()
     {
         if (rx.equals(rooms.get(7)))
         {
             io.put(rooms.get(7).getDescription()
-                    +"\n(╯°□°）╯︵ ┻━┻"
-                    +"\nPress F6 to play again!"
-                    +"\n┬─┬﻿ ノ( ゜-゜ノ)\n");
+                    + "\n(╯°□°）╯︵ ┻━┻"
+                    + "\nPress F6 to play again!"
+                    + "\n┬─┬﻿ ノ( ゜-゜ノ)\n");
         }
-        
-    }            
-    
-    private void getOptions() 
+
+    }
+
+    private void getOptions()
     {
-        
-        if (!(rx.getNorth() == null)) 
+
+        if (!(rx.getNorth() == null))
         {
             validOptions.add(NORTH);
         }
-        if (!(rx.getSouth() == null)) 
+        if (!(rx.getSouth() == null))
         {
             validOptions.add(SOUTH);
         }
-        if (!(rx.getEast() == null)) 
+        if (!(rx.getEast() == null))
         {
             validOptions.add(EAST);
         }
-        if (!(rx.getWest() == null)) 
+        if (!(rx.getWest() == null))
         {
             validOptions.add(WEST);
         }
         validOptions.add(SEARCH);
         validOptions.add(INVENTORY);
-        validOptions.add(QUIT);        
+        validOptions.add(QUIT);
     }
 }
-
