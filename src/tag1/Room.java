@@ -1,27 +1,27 @@
 package tag1;
 
-import java.util.ArrayList;
 
 public class Room
 {
 
     private String description;
     private Room north, south, east, west;
-    private ArrayList<Gold> gold;
+    private Gold gold;
 
-    public ArrayList<Gold> getGold()
+    public Gold getGold()
     {
         return gold;
     }
 
-    public void setGold(ArrayList<Gold> gold)
+    public void setGold(Gold gold)
     {
         this.gold = gold;
     }
     
-    public Room(String description)
+    public Room(String description, Gold gold)
     {
         this.description = description;
+        this.gold = gold;
     }
 
     public String getDescription()

@@ -3,9 +3,9 @@ package tag1;
 public class Gold extends Item
 {
     
-    public Gold(Item i)
+    public Gold(Gold gold)
     {
-        super(i);
+        super(gold);
         name = "Gold";
         weight = 1;
         value = 1;
