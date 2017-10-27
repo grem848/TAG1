@@ -7,6 +7,7 @@ public class Room
     private String description;
     private Room north, south, east, west;
     private Gold gold;
+    // arraylist med items
 
     public Gold getGold()
     {

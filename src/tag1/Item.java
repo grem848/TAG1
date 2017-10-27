@@ -7,12 +7,12 @@ public class Item
     public int value;
     public int durability;
 
-    public Item(Item i)
+    public Item()
     {
-        this.name = i.name;
-        this.weight = i.weight;
-        this.value = i.value;
-        this.durability = i.durability;
+        this.name = name;
+        this.weight = weight;
+        this.value = value;
+        this.durability = durability;
     }
 
     public String getName()
