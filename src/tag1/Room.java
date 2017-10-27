@@ -1,5 +1,7 @@
 package tag1;
 
+import java.util.ArrayList;
+
 
 public class Room
 {
@@ -7,7 +9,24 @@ public class Room
     private String description;
     private Room north, south, east, west;
     private Gold gold;
+//    private ArrayList<Item> items;
     // arraylist med items
+
+//    public ArrayList<Item> getItems()
+//    {
+//        return items;
+//    }
+//
+//    public void setItems(ArrayList<Item> items)
+//    {
+//        this.items = items;
+//    }
+//
+//    public Room(String description, ArrayList<Item> items)
+//    {
+//        this.description = description;
+//        this.items = items;
+//    }
 
     public Gold getGold()
     {

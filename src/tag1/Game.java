@@ -10,7 +10,7 @@ public class Game
 {
 
     public static final boolean DEBUG = true; // false when game is done
-    Room rx = null; // Current room
+    private Room rx = null; // Current room
     TextIO io = new TextIO(new SysTextIO());
     ArrayList<Room> rooms = new ArrayList<>();
     ArrayList<String> validOptions = new ArrayList<>();
@@ -38,7 +38,7 @@ public class Game
         play();
     }
     
-    public void play() throws IOException, ClassNotFoundException
+    private void play() throws IOException, ClassNotFoundException
     {
         while (!rx.equals(rooms.get(14)))
         {
