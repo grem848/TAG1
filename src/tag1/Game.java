@@ -320,7 +320,7 @@ public class Game
                     + "\n\n*SLASH*"
                     + "\nYOU DIED!"
                     + "\nGAME OVER!\n");
-//            System.exit(0);
+            System.exit(0);
         }
         if (rx.equals(rooms.get(14)))
         {
