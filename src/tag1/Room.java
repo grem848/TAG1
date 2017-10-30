@@ -8,7 +8,7 @@ public class Room
 
     private String description;
     private Room north, south, east, west;
-    private Gold gold;
+    private int gold;
 //    private ArrayList<Item> items;
     // arraylist med items
 
@@ -27,22 +27,29 @@ public class Room
 //        this.description = description;
 //        this.items = items;
 //    }
-
-    public Gold getGold()
-    {
-        return gold;
-    }
-
-    public void setGold(Gold gold)
-    {
-        this.gold = gold;
-    }
-    
-    public Room(String description, Gold gold)
+    public Room(String description, int gold)
     {
         this.description = description;
         this.gold = gold;
     }
+
+    public Room(String description)
+    {
+        this.description = description;
+    }
+    
+    
+    public int getGold()
+    {
+        return gold;
+    }
+
+    public void setGold(int gold)
+    {
+        this.gold = gold;
+    }
+    
+
 
     public String getDescription()
     {

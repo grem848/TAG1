@@ -130,84 +130,84 @@ public class Game
 
     private void getPlayerStats()
     {
-        io.put("\nPlayer:" + player.getFirstName() + " " + player.getLastName() + "\nHP:" + player.getHealth() + "\n");
+        io.put("\nPlayer:" + player.getFirstName() + " " + player.getLastName() + "\nHP:" + player.getHealth() + "\nGold:" + player.getGoldInv() + "\n");
     }
 
     private void newRoom()
     {
-        final int MAX_GOLD = 10;
+        final int MAX_GOLD = 100;
         Random r = new Random();
         // Room 0
         rooms.add(new Room("\n********************\n* Mansion Entrance *\n********************\n\n"
                 + "You enter the mansion and step into a small dark room.\n"
                 + "You hear the door close behind you, then you hear a loud\n"
                 + "*CLICK*\n"
-                + "The door you came from is now locked.", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "The door you came from is now locked."));
         // Room 1           
         rooms.add(new Room("\n*****************\n* Entrance Hall *\n*****************\n\n"
                 + "The entrance hall is so big you could fit 1000 pigs in it.\n"
                 + "The black stone walls used to be lit with torches, but\n"
                 + "it looks like they all burned out years ago.\n"
-                + "The corners of the entrance hall are covered in spider web.", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "The corners of the entrance hall are covered in spider web."));
         // Room 2
         rooms.add(new Room("\n*******************\n* Eastern Hallway *\n*******************\n\n"
                 + "The eastern hallway is wide like the river\n"
                 + "that cuts through the landscape outside the mansion.\n"
                 + "The hallway walls are filled with paintings of faded\n"
                 + "and crackled images, it is almost impossible to make out\n"
-                + "what the paintings used to portray.", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "what the paintings used to portray.", r.nextInt(MAX_GOLD)));
         // Room 3
         rooms.add(new Room("\n***************\n* Dining Room *\n***************\n\n"
                 + "The dining room seems to have been an impressive dining room once\n"
                 + "but years of neglect have taken its toll on the interior.\n"
                 + "In the middle of the room stands a long oak table,\n"
-                + "the table is set but the tableware is completely covered in dust", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "the table is set but the tableware is completely covered in dust", r.nextInt(MAX_GOLD)));
         // Room 4
         rooms.add(new Room("\n************\n* Basement *\n************\n\n"
                 + "A dense cruel stench of death fills the air, as the creaks door opens.\n"
                 + "The basement is barely more than a crawl space,\n"
-                + "you have to bow your head down just to walk in there.", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "you have to bow your head down just to walk in there.", r.nextInt(MAX_GOLD)));
         // Room 5
         rooms.add(new Room("\n***********\n* Kitchen *\n***********\n\n"
                 + "The kitchen is a very dark room, the only thing visible is\n"
                 + "the thick layer of dust on the old kitchen appliances.\n"
                 + "A foul smell surrounds the old fridge, left opened for\n"
-                + "what looks like many years.", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "what looks like many years.", r.nextInt(MAX_GOLD)));
         // Room 6
         rooms.add(new Room("\n**************\n* Great Hall *\n**************\n\n"
                 + "The great hall is the biggest room in the mansion.\n"
-                + "Built into the northern wall is a huge decorated fireplace.\n", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "Built into the northern wall is a huge decorated fireplace.\n", r.nextInt(MAX_GOLD)));
         // Room 7
         rooms.add(new Room("\n*******************\n* Western Hallway *\n*******************\n\n"
                 + "The western hallway is narrow with a floor of slate grey tiles\n"
-                + "and walls of the same colour.\n", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "and walls of the same colour.\n"));
         // Room 8
         rooms.add(new Room("\n***********\n* Library *\n***********\n\n"
                 + "The library looks like it's the oldest room in the mansion.\n"
-                + "A few books and pages lies scattered across the floor.\n", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "A few books and pages lies scattered across the floor.\n", r.nextInt(MAX_GOLD)));
         // Room 9
         rooms.add(new Room("\n***************\n* Hidden Room *\n***************\n\n"
                 + "As you enter the hidden room you step in something sticky\n"
                 + "You examine the sticky substance and soon you realize\n"
                 + "that it's a pool of blood and guts!\n"
-                + "What could have made this mess?", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "What could have made this mess?", r.nextInt(MAX_GOLD)));
         // Room 10
         rooms.add(new Room("\n***********\n* Bedroom *\n***********\n\n"
                 + "In the bedroom stands a large bed full of dust\n"
-                + "the last thing that slept there was probably a spider.", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "the last thing that slept there was probably a spider.", r.nextInt(MAX_GOLD)));
         // Room 11
         rooms.add(new Room("\n****************\n* Storage Room *\n****************\n\n"
                 + "The storage room is full of old crates and barrels.\n"
-                + "You begin to wonder what they might contain.", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "You begin to wonder what they might contain.", r.nextInt(MAX_GOLD)));
         // Room 12
         rooms.add(new Room("\n**********\n* Garden *\n**********\n\n"
                 + "The garden is a cold and dark place.\n"
                 + "The gardens edge is guarded by a tall fence, leaving you no escape.\n"
-                + "The atmosphere has an eerie feeling.", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "The atmosphere has an eerie feeling."));
         // Room 13
         rooms.add(new Room("\n**************\n* Laboratory *\n**************\n\n"
                 + "The laboratory is equipped with old sophisticated tools\n"
-                + "and shelfs full of jars with dead rats inside a greenish liquid.", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "and shelfs full of jars with dead rats inside a greenish liquid.", r.nextInt(MAX_GOLD)));
         // Room 14        
                 rooms.add(new Room("\n***************\n* Trophy Room *\n***************\n\n"
                 + "The walls in the trophy room are full of hunting trophies.\n"
@@ -218,7 +218,7 @@ public class Game
                 + "*************************************************\n"
                 + "* YOU HAVE FOUND THE TREASURE, CONGRATULATIONS! *\n"
                 + "*************************************************\n"
-                + "+++++++++++++++++++++++++++++++++++++++++++++++++", new Gold("Gold", 1, r.nextInt(MAX_GOLD), 1)));
+                + "+++++++++++++++++++++++++++++++++++++++++++++++++", r.nextInt(MAX_GOLD)));
     }
 
     private void setDirections()
@@ -294,14 +294,15 @@ public class Game
                 System.exit(0);
                 break;
             case SEARCH:
-                if (rx.getGold() == null)
+                if (rx.getGold() == 0)
                 {
                 System.out.println("\nYou found nothing");
                 }
                 else
                 {
-                io.put("\nYou found "+ rx.getGold().getValue() + " " + rx.getGold().getName() + "!");
-                rx.setGold(null);
+                io.put("\nYou found "+ rx.getGold() + " Gold!");
+                player.setGoldInv(rx.getGold());
+                rx.setGold(0);
                 }
                 break;
 //            case INVENTORY: player.getInventory(); break;

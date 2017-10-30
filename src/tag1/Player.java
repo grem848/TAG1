@@ -9,15 +9,25 @@ public class Player implements Serializable
     private String firstName;
     private String lastName;
     private int health;
-    private ArrayList<String> inventory;
+    private int goldInv;
     ArrayList<Player> players;
 
-    public ArrayList<String> getInventory()
+    public int getGoldInv()
+    {
+        return goldInv;
+    }
+
+    public void setGoldInv(int goldInv)
+    {
+        this.goldInv = goldInv;
+    }
+    private ArrayList<Item> inventory;
+    public ArrayList<Item> getInventory()
     {
         return inventory;
     }
 
-    public void setInventory(ArrayList<String> inventory)
+    public void setInventory(ArrayList<Item> inventory)
     {
         this.inventory = inventory;
     }
@@ -53,7 +63,7 @@ public class Player implements Serializable
     @Override
     public String toString()
     {
-        return firstName + " " + lastName + " : Gold: " + inventory + "\n";
+        return firstName + " " + lastName + " : Gold: " + goldInv + "\n";
     }
 
 }
