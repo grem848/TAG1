@@ -1,18 +1,16 @@
 package tag1;
 
-public class Item
-{
-    public String name;
-    public int weight;
-    public int value;
-    public int durability;
+import java.io.Serializable;
 
-    public Item()
+public class Item implements Serializable
+{
+    private final String name;
+    private final String description;
+
+    public Item(String name, String description)
     {
         this.name = name;
-        this.weight = weight;
-        this.value = value;
-        this.durability = durability;
+        this.description = description;
     }
 
     public String getName()
@@ -20,24 +18,9 @@ public class Item
         return name;
     }
 
-    public int getWeight()
+    public String getDescription()
     {
-        return weight;
-    }
-
-    public int getValue()
-    {
-        return value;
-    }
-
-    public int getDurability()
-    {
-        return durability;
-    }
-
-    public void setDurability(int durability)
-    {
-        this.durability = durability;
+        return description;
     }
     
 }

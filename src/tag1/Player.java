@@ -10,8 +10,26 @@ public class Player implements Serializable
     private String lastName;
     private int health;
     private int goldInv;
-    ArrayList<Player> players;
+    private Weapon weapon;
+    private ArrayList<Item> pInventory = new ArrayList();
 
+    public Player(String firstName, String lastName, int goldInv)
+    {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.goldInv = goldInv;
+    }
+
+    public Weapon getWeapon()
+    {
+        return weapon;
+    }
+
+    public void setWeapon(Weapon weapon)
+    {
+        this.weapon = weapon;
+    }
+   
     public int getGoldInv()
     {
         return goldInv;
@@ -21,17 +39,17 @@ public class Player implements Serializable
     {
         this.goldInv = goldInv;
     }
-    private ArrayList<Item> inventory;
-    public ArrayList<Item> getInventory()
+
+    public ArrayList<Item> getpInventory()
     {
-        return inventory;
+        return pInventory;
     }
 
-    public void setInventory(ArrayList<Item> inventory)
+    public void setpInventory(ArrayList<Item> pInventory)
     {
-        this.inventory = inventory;
+        this.pInventory = pInventory;
     }
-
+    
     public void setHealth(int health)
     {
         this.health = health;
@@ -40,14 +58,6 @@ public class Player implements Serializable
     public int getHealth()
     {
         return health;
-    }
-
-    public Player(String firstName, String lastName)
-    {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.health = 100;
-        this.inventory = new ArrayList<>();
     }
 
     public String getFirstName()

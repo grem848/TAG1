@@ -1,7 +1,5 @@
 package tag1;
 
-import java.util.ArrayList;
-
 
 public class Room
 {
@@ -9,24 +7,21 @@ public class Room
     private String description;
     private Room north, south, east, west;
     private int gold;
-//    private ArrayList<Item> items;
-    // arraylist med items
+    private Weapon weapon;
+    private Potion potion;
 
-//    public ArrayList<Item> getItems()
-//    {
-//        return items;
-//    }
-//
-//    public void setItems(ArrayList<Item> items)
-//    {
-//        this.items = items;
-//    }
-//
-//    public Room(String description, ArrayList<Item> items)
-//    {
-//        this.description = description;
-//        this.items = items;
-//    }
+    public Room(String description, Weapon weapon)
+    {
+        this.description = description;
+        this.weapon = weapon;
+    }
+
+    public Room(String description, Potion potion)
+    {
+        this.description = description;
+        this.potion = potion;
+    }
+    
     public Room(String description, int gold)
     {
         this.description = description;
@@ -36,6 +31,21 @@ public class Room
     public Room(String description)
     {
         this.description = description;
+    }
+
+    public Weapon getWeapon()
+    {
+        return weapon;
+    }
+
+    public void setWeapon(Weapon weapon)
+    {
+        this.weapon = weapon;
+    }
+
+    public Potion getPotion()
+    {
+        return potion;
     }
     
     
@@ -48,8 +58,6 @@ public class Room
     {
         this.gold = gold;
     }
-    
-
 
     public String getDescription()
     {

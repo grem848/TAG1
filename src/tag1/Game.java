@@ -2,7 +2,11 @@ package tag1;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import textio.SysTextIO;
 import textio.*;
 
@@ -11,12 +15,18 @@ public class Game
 
     public static final boolean DEBUG = true; // false when game is done
     private Room rx = null; // Current room
+    private Room mrx = null; // monster current room
     TextIO io = new TextIO(new SysTextIO());
     ArrayList<Room> rooms = new ArrayList<>();
     ArrayList<String> validOptions = new ArrayList<>();
     ArrayList<Player> players = null;
+    Monster monster;
     Player player;
     File highscore = new File("Players.txt");
+    Weapon knife = new Weapon(30, "Knife of a Thousand Truths", "Foretold by Salzman");
+    Weapon sword = new Weapon(40, "Ashbringer", "So it was that over the course of time,"
+            + " \nthe man and the weapon seemed as one. Ashbringer became a name of legend,"
+            + " \nattributed not just to the fearsome blade but also\nto the relentless knight who wielded it.");
     public static final String NORTH = "Go North";
     public static final String SOUTH = "Go South";
     public static final String EAST = "Go East";
@@ -35,6 +45,7 @@ public class Game
         newRoom();
         setDirections();
         rx = rooms.get(0);
+        mrx = rooms.get(13);
         play();
     }
     
@@ -47,11 +58,17 @@ public class Game
             int select = io.select("\n\nPick a direction to go\n", validOptions, "");
             io.put(Integer.toString(select));
             playerCommands(select, validOptions);
-            savePlayers(highscore);
+//            savePlayers(highscore);
+            if (rx == mrx)
+            {
+                System.err.println("\nGame Over \nYou got killed by Erik!\n");
+                System.exit(0);
+            }
+            moveMonster();
             winGame();
         }
-
     }
+    
     private void makePlayers() throws IOException
     {
 
@@ -96,14 +113,48 @@ public class Game
         io.put("Type in your last name:");
         String lastName = io.get();
         io.put(lastName + "\n");
-        player = new Player(firstName, lastName);
+        player = new Player(firstName, lastName, 0);
         players.add(player);
-        io.put("\n\n*******HIGH SCORE LIST*******\n");
-        System.out.println(players);
-        io.put("\nSCROLL UP FOR HIGH SCORE LIST!\n*****************************\n\n");
-        // players.clear(); // Use to clear highscore list
+        HSfileReader();
     }
 
+    private void HSfileReader()
+    {
+        try 
+        {
+
+            io.put("\n\n*******HIGH SCORE LIST*******\n\n");
+            FileInputStream fi = new FileInputStream(highscore);
+            ObjectInputStream oi = new ObjectInputStream(fi);
+            players = (ArrayList<Player>) oi.readObject();
+            Collections.sort(players, new Comparator<Player>()
+            {
+                @Override
+                public int compare(Player o1, Player o2)
+                {
+                    return o2.getGoldInv() - o1.getGoldInv();
+                }
+            });
+            for(Player p : players)
+            {
+                io.put(p.toString());
+            }
+
+            io.put("\nSCROLL UP FOR HIGH SCORE LIST!\n*****************************\n\n");
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        } 
+        catch (ClassNotFoundException ex)
+        {
+            ex.printStackTrace();
+        }
+        
+//        System.out.println(players);
+        // players.clear(); // Use to clear highscore list
+    }
+    
     private void savePlayers(File highscore)
     {
         if (DEBUG == true)
@@ -122,12 +173,51 @@ public class Game
         } catch (FileNotFoundException e)
         {
             io.put("\nError file not found!");
-        } catch (IOException e)
+            e.printStackTrace();
+        } 
+        catch (IOException e)
         {
             io.put("\nError can not be written!");
+            e.printStackTrace();
         }
     }
 
+    private void moveMonster()
+    {
+        {
+        int walk = (int) (Math.random() * 4 + 1);
+        switch (walk) 
+        {
+            case 1:
+                if (mrx.getNorth() != null) 
+                {
+                    mrx = mrx.getNorth();
+                }
+                break;
+            case 2:
+                if (mrx.getSouth() != null) 
+                {
+                    mrx = mrx.getSouth();
+                }
+                break;
+            case 3:
+                if (mrx.getEast() != null) 
+                {
+                    mrx = mrx.getEast();
+                }
+                break;
+            case 4:
+                if (mrx.getWest() != null) 
+                {
+                    mrx = mrx.getWest();
+                }
+                break;
+
+        }
+
+        }
+    }
+    
     private void getPlayerStats()
     {
         io.put("\nPlayer:" + player.getFirstName() + " " + player.getLastName() + "\nHP:" + player.getHealth() + "\nGold:" + player.getGoldInv() + "\n");
@@ -172,7 +262,7 @@ public class Game
                 + "The kitchen is a very dark room, the only thing visible is\n"
                 + "the thick layer of dust on the old kitchen appliances.\n"
                 + "A foul smell surrounds the old fridge, left opened for\n"
-                + "what looks like many years.", r.nextInt(MAX_GOLD)));
+                + "what looks like many years.", knife));
         // Room 6
         rooms.add(new Room("\n**************\n* Great Hall *\n**************\n\n"
                 + "The great hall is the biggest room in the mansion.\n"
@@ -198,7 +288,7 @@ public class Game
         // Room 11
         rooms.add(new Room("\n****************\n* Storage Room *\n****************\n\n"
                 + "The storage room is full of old crates and barrels.\n"
-                + "You begin to wonder what they might contain.", r.nextInt(MAX_GOLD)));
+                + "You begin to wonder what they might contain.", sword));
         // Room 12
         rooms.add(new Room("\n**********\n* Garden *\n**********\n\n"
                 + "The garden is a cold and dark place.\n"
@@ -290,47 +380,85 @@ public class Game
                 rx = rx.getWest();
                 break;
             case QUIT:
-                savePlayers(highscore);
+//                savePlayers(highscore);
                 System.exit(0);
                 break;
             case SEARCH:
-                if (rx.getGold() == 0)
+                searchRoom();
+                break;
+            case INVENTORY:
+                if (player.getpInventory() == null)
                 {
-                System.out.println("\nYou found nothing");
+                    io.put("You inventory is empty!");
                 }
                 else
                 {
-                io.put("\nYou found "+ rx.getGold() + " Gold!");
-                player.setGoldInv(rx.getGold());
-                rx.setGold(0);
+                    io.put("Inventory: ");
+                    String out  = "";
+                    for(Item item : player.getpInventory())
+                    {
+                    out += item.getName();
+                    }
+                    io.put(out);
                 }
                 break;
-//            case INVENTORY: player.getInventory(); break;
             default: //ignore
         }
         validOptions.clear();
     }
+    
+    private void searchRoom()
+    {
+       if (rx.getGold() == 0 && rx.getWeapon() == null)
+        {
+            io.put("\nYou found nothing");
+        }
+       else if (rx.getGold() > 0)
+       {
+            io.put("\nYou found "+ rx.getGold() + " Gold!");
+            player.setGoldInv(rx.getGold() + player.getGoldInv());
+            rx.setGold(0);
+       }
+       else if (rx.getWeapon() == knife)
+        {
+            io.put("\nYou found " + knife.getName());
+            io.put("\nOn the blade a text reads " + "'" + knife.getDescription() + "'");
+            io.put("\nA demonic voice whispers..."
+                    + "\n'How do you kill that which has no life?'");
+            if (player.getWeapon() != sword)
+            {
+                player.setWeapon(knife);
+            }
+            else
+            {
+                player.getpInventory().add(knife);
+            }
+            rx.setWeapon(null);
+        }
+       else if (rx.getWeapon() == sword)
+       {
+            io.put("\nYou found " + sword.getName());
+            io.put("\nOn the blade a text reads " + "'" + sword.getDescription() + "'");
+            if (player.getWeapon() == knife)
+            {
+                player.getpInventory().add(knife);
+            }
+            player.setWeapon(sword);
+            rx.setWeapon(null);
+       }
+    }
        
     private void winGame()
     {
-        int a = (int) (Math.random() * 12 + 1); // Monster random room counter
-        if (rx.equals(rooms.get(a)))
-        {
-            
-            System.err.println(rooms.get(a).getDescription()
-                    + "\n\n*SLASH*"
-                    + "\nYOU DIED!"
-                    + "\nGAME OVER!\n");
-            System.exit(0);
-        }
         if (rx.equals(rooms.get(14)))
         {
+            player.setGoldInv(player.getGoldInv() + 500);
+            savePlayers(highscore);
             io.put(rooms.get(14).getDescription()
                     + "\n(╯°□°）╯︵ ┻━┻"
                     + "\nPress F6 to play again!"
                     + "\n┬─┬﻿ ノ( ゜-゜ノ)\n");
         }
-
     }
     
     private void getOptions()
