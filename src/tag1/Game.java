@@ -19,14 +19,16 @@ public class Game
     TextIO io = new TextIO(new SysTextIO());
     ArrayList<Room> rooms = new ArrayList<>();
     ArrayList<String> validOptions = new ArrayList<>();
+    ArrayList<String> validOptions2 = new ArrayList<>();
     ArrayList<Player> players = null;
-    Monster monster;
+    Monster monster = new Monster("Erik", 100, 25, 200);
     Player player;
     File highscore = new File("Players.txt");
-    Weapon knife = new Weapon(30, "Knife of a Thousand Truths", "Foretold by Salzman");
-    Weapon sword = new Weapon(40, "Ashbringer", "So it was that over the course of time,"
+    Weapon knife = new Weapon(20, "Knife of a Thousand Truths", "Foretold by Salzman");
+    Weapon sword = new Weapon(20, "Ashbringer", "So it was that over the course of time,"
             + " \nthe man and the weapon seemed as one. Ashbringer became a name of legend,"
             + " \nattributed not just to the fearsome blade but also\nto the relentless knight who wielded it.");
+    Potion potion = new Potion(50, "King's Moss", "The blue liquid inside gives a bonus to your health");
     public static final String NORTH = "Go North";
     public static final String SOUTH = "Go South";
     public static final String EAST = "Go East";
@@ -35,34 +37,64 @@ public class Game
     public static final String INVENTORY = "Inventory";
     public static final String HIGHSCORE = "High Score";
     public static final String QUIT = "Quit Game";
+    public static final String FIGHT = "Fight";
+    public static final String RUN = "Run";
+    public boolean isInCombat = false;
+    public static final String ANSI_RED = "\u001B[31m"; // text color red
+    public static final String ANSI_RESET = "\u001B[0m"; // text color normal
+    public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m"; // text background color green
+    
 
     public Game() throws IOException, ClassNotFoundException
     {
-        io.put("\n***********************\n* The Haunted Mansion *\n***********************\n\n");
+        Intro();
         makePlayers();
-        // hotdogsen = godmode
-
         newRoom();
         setDirections();
         rx = rooms.get(0);
-        mrx = rooms.get(13);
+        mrx = rooms.get(6);
         play();
     }
-    
+
     private void play() throws IOException, ClassNotFoundException
     {
         while (!rx.equals(rooms.get(14)))
         {
+            io.put("Erik is in room " + mrx.getDescription());
             io.put(rx.getDescription());
             getOptions();
             int select = io.select("\n\nPick a direction to go\n", validOptions, "");
-            io.put(Integer.toString(select));
+            io.put(Integer.toString(select)); // delete?
             playerCommands(select, validOptions);
-//            savePlayers(highscore);
+//            savePlayers(highscore); // FIX MIG!!!!!!!!!!!
             if (rx == mrx)
             {
-                System.err.println("\nGame Over \nYou got killed by Erik!\n");
-                System.exit(0);
+                if (mrx == rooms.get(14))
+                {
+                    monster.setMobAlive(false);
+                    System.err.println("Oh nooo! Erik is in the trophy room! *BANG* Oh.. the chandelier fell down and killed him..");
+                    rx.setGold(rx.getGold() + monster.getGoldInv());
+                    monster.setGoldInv(0);
+                    mrx = rooms.get(15);
+                }
+                else
+                {
+                    validOptions2.add(FIGHT);
+                    validOptions2.add(RUN);
+                    select = io.select("\nPick an option\n", validOptions2,"");
+                    playerCommands2(select, validOptions2);
+                    validOptions2.clear();
+                    
+                    while(isInCombat == true)
+                    {
+                    validOptions2.add(FIGHT);
+                    validOptions2.add(RUN);
+                    select = io.select("\nPick an option\n", validOptions2,"");
+                    playerCommands2(select, validOptions2);
+                    }
+                    
+//                    validOptions2.clear();                  
+                }
             }
             moveMonster();
             winGame();
@@ -113,7 +145,13 @@ public class Game
         io.put("Type in your last name:");
         String lastName = io.get();
         io.put(lastName + "\n");
+        
         player = new Player(firstName, lastName, 0);
+        if (player.getLastName().equals("Hotdogsen")) // godmode
+        {
+            player.setHealth(500);
+            player.setDamage(100);
+        }
         players.add(player);
         HSfileReader();
     }
@@ -297,7 +335,7 @@ public class Game
         // Room 13
         rooms.add(new Room("\n**************\n* Laboratory *\n**************\n\n"
                 + "The laboratory is equipped with old sophisticated tools\n"
-                + "and shelfs full of jars with dead rats inside a greenish liquid.", r.nextInt(MAX_GOLD)));
+                + "and shelfs full of jars with dead rats inside a greenish liquid.", potion));
         // Room 14        
                 rooms.add(new Room("\n***************\n* Trophy Room *\n***************\n\n"
                 + "The walls in the trophy room are full of hunting trophies.\n"
@@ -309,6 +347,9 @@ public class Game
                 + "* YOU HAVE FOUND THE TREASURE, CONGRATULATIONS! *\n"
                 + "*************************************************\n"
                 + "+++++++++++++++++++++++++++++++++++++++++++++++++", r.nextInt(MAX_GOLD)));
+        // Room 15 // Monster graveyard
+                rooms.add(new Room("Graveyard"));
+
     }
 
     private void setDirections()
@@ -380,7 +421,7 @@ public class Game
                 rx = rx.getWest();
                 break;
             case QUIT:
-//                savePlayers(highscore);
+//                savePlayers(highscore); // FIX MIG !!!!!!!!!!!!
                 System.exit(0);
                 break;
             case SEARCH:
@@ -407,9 +448,93 @@ public class Game
         validOptions.clear();
     }
     
+    private void playerCommands2(int input, ArrayList<String> validOptions2) throws IOException, ClassNotFoundException
+    {
+        getPlayerStats();
+        switch (validOptions2.get(input))
+        {
+            case FIGHT:
+                isInCombat = true;
+                combat();
+                if (player.getHealth() <= 0)
+                {
+                    playerWasted();
+                    System.exit(0);
+                    break;
+                }
+                if (monster.getHealth() <= 0)
+                {
+                    monster.setMobAlive(false);
+                    isInCombat = false;
+                    io.put("\n" + ANSI_RED + monster.getName().toUpperCase() + " IS DEAD!\n" + ANSI_RESET);
+                    io.put("\n" + monster.getName() + " dropped a handbag with something shiny inside\n");
+                    rx.setGold(rx.getGold() + monster.getGoldInv());
+                    monster.setGoldInv(0);
+                    mrx = rooms.get(15);
+                    break;
+                }
+                break;
+            case RUN:
+                io.put("You ran to the entrance, but the door is locked!");
+                rx = rooms.get(0);
+                isInCombat = false;
+                break;
+            default: //ignore
+        }
+        validOptions2.clear();
+    }
+
+    private void combat()
+    {
+        while (monster.isMobAlive() == true) 
+        {
+                    io.put("                                              ,--,  ,.-.\n" +
+"                ,                   \\,       '-,-`,'-.' | ._\n" +
+"               /|           \\    ,   |\\         }  )/  / `-,',\n" +
+"               [ '          |\\  /|   | |        /  \\|  |/`  ,`\n" +
+"               | |       ,.`  `,` `, | |  _,...(   (      _',\n" +
+"               \\  \\  __ ,-` `  ,  , `/ |,'      Y     (   \\_L\\\n" +
+"                \\  \\_\\,``,   ` , ,  /  |         )         _,/\n" +
+"                 \\  '  `  ,_ _`_,-,<._.<        /         /\n" +
+"                  ', `>.,`  `  `   ,., |_      |         /\n" +
+"                    \\/`  `,   `   ,`  | /__,.-`    _,   `\\\n" +
+"                -,-..\\  _  \\  `  /  ,  / `._) _,-\\`       \\\n" +
+"                 \\_,,.) /\\    ` /  / ) (-,, ``    ,        |\n" +
+"                ,` )  | \\_\\       '-`  |  `(               \\\n" +
+"               /  /```(   , --, ,' \\   |`<`    ,            |\n" +
+"              /  /_,--`\\   <\\  V /> ,` )<_/)  | \\      _____)\n" +
+"        ,-, ,`   `   (_,\\ \\    |   /) / __/  /   `----`\n" +
+"       (-, \\           ) \\ ('_.-._)/ /,`    /\n" +
+"       | /  `          `/ \\\\ V   V, /`     /\n" +
+"    ,--\\(        ,     <_/`\\\\     ||      /\n" +
+"   (   ,``-     \\/|         \\-A.A-`|     /\n" +
+"  ,>,_ )_,..(    )\\          -,,_-`  _--`\n" +
+" (_ \\|`   _,/_  /  \\_            ,--`\n" +
+"  \\( `   <.,../`     `-.._   _,-`\n" +
+"   `                      ```\n");
+            io.put(monster.getName() + " has " + monster.getHealth() + " health\n");
+            io.put("------------------\n");
+            io.put("Erik bitchslaps you\n");
+            player.setHealth(player.getHealth()- monster.getDamage());
+
+            io.put(monster.getName() + " hits you for " + monster.getDamage() + " damage!\n");
+            io.put("You have " + player.getHealth() + " health\n");
+            io.put("------------------\n");
+            
+            io.put("You attack " + monster.getName() + "\n");
+            monster.setHealth(monster.getHealth() - player.getDamage());
+            io.put("You hit " + monster.getName() + " for " + player.getDamage() + " damage!\n");
+            io.put("------------------\n");
+            
+            io.put(monster.getName() + " has " + monster.getHealth() + " health\n");
+            
+            break;
+        }
+    }
+    
     private void searchRoom()
     {
-       if (rx.getGold() == 0 && rx.getWeapon() == null)
+       if (rx.getGold() == 0 && rx.getWeapon() == null && rx.getPotion() == null)
         {
             io.put("\nYou found nothing");
         }
@@ -424,10 +549,11 @@ public class Game
             io.put("\nYou found " + knife.getName());
             io.put("\nOn the blade a text reads " + "'" + knife.getDescription() + "'");
             io.put("\nA demonic voice whispers..."
-                    + "\n'How do you kill that which has no life?'");
+                    + "\n'How do you kill that which has no life?'\n");
             if (player.getWeapon() != sword)
             {
                 player.setWeapon(knife);
+                player.setDamage(knife.getDamage());
             }
             else
             {
@@ -438,13 +564,21 @@ public class Game
        else if (rx.getWeapon() == sword)
        {
             io.put("\nYou found " + sword.getName());
-            io.put("\nOn the blade a text reads " + "'" + sword.getDescription() + "'");
+            io.put("\nOn the blade a text reads " + "'" + sword.getDescription() + "'\n");
             if (player.getWeapon() == knife)
             {
                 player.getpInventory().add(knife);
             }
             player.setWeapon(sword);
+            player.setDamage(sword.getDamage());
             rx.setWeapon(null);
+       }
+       else if (rx.getPotion() == potion)
+       {
+           io.put("\nYou found " + potion.getName());
+           io.put("\nOn the jar a label reads " + "'" + potion.getDescription() + "'\n");
+           player.setHealth(player.getHealth() + potion.getHealthBonus());
+           rx.setPotion(null);
        }
     }
        
@@ -483,5 +617,40 @@ public class Game
         validOptions.add(SEARCH);
         validOptions.add(INVENTORY);
         validOptions.add(QUIT);
+    }
+    
+    private void Intro()
+    {
+        io.put("\n***********************\n* The Haunted Mansion *\n***********************\n\n");
+        io.put("     ':.\n" +
+                "         []_____\n" +
+                "        /\\      \\\n" +
+                "    ___/  \\__/\\__\\__\n" +
+                "---/\\___\\ |''''''|__\\-- \n" +
+                "   ||'''| |''||''|''|\n" +
+                "   ``\"\"\"`\"`\"\"))\"\"`\"\"`\n\n"
+                +"***********************\n");
+    }
+    
+    private void playerWasted()
+    {
+        io.put("                      .--. .-,       .-..-.__\n" +
+                "                    .'(`.-` \\_.-'-./`  |\\_( \"\\__\n" +
+                "                 __.>\\ ';  _;---,._|   / __/`'--)\n" +
+                "                /.--.  : |/' _.--.<|  /  | |\n" +
+                "            _..-'    `\\     /' /`  /_/ _/_/\n" +
+                "             >_.-``-. `Y  /' _;---.`|/)))) \n" +
+                "            '` .-''. \\|:  \\.'   __, .-'\"`\n" +
+                "             .'--._ `-:  \\/:  /'  '.\\             _|_\n" +
+                "                 /.'`\\ :;   /'      `-           `-|-`\n" +
+                "                -`    |     |                      |\n" +
+                "                      :.; : |                  .-'~^~`-.\n" +
+                "                      |:    |                .' _     _ `.\n" +
+                "                      |:.   |                | |_) | |_) |\n" +
+                "                      :. :  |                | | \\ | |   |\n" +
+                "                    ..|.. : ;                |           |\n" +
+                "            -.\"-/\\\\\\/:::.    `\\.\"-._'.\"-\"_\\\\-|           |///.\"-\n" +
+                "            \" -.\"-.\\\\\"-.\"//.-\".`-.\"_\\\\-.\".-\\\\`=.........=`//-\".\n");
+        io.put("\n" + ANSI_RED + "Game Over " + "\n" + ANSI_RED + "You got killed by Erik!\n" + ANSI_RESET);
     }
 }

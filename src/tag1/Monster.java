@@ -8,16 +8,27 @@ public class Monster
     private String name;
     private int health;
     private int damage;
-    private ArrayList<String> inventory;
-
-    public Monster(String name, int health, int damage, ArrayList<String> inventory)
+    private boolean mobAlive = true;
+    private int goldInv;
+    
+    public Monster(String name, int health, int damage, int goldInv)
     {
         this.name = name;
         this.health = health;
         this.damage = damage;
-        this.inventory = inventory;
+        this.goldInv = goldInv;
     }
 
+    public int getGoldInv()
+    {
+        return goldInv;
+    }
+
+    public void setGoldInv(int goldInv)
+    {
+        this.goldInv = goldInv;
+    }
+    
     public String getName()
     {
         return name;
@@ -48,14 +59,14 @@ public class Monster
         this.damage = damage;
     }
 
-    public ArrayList<String> getInventory()
+    public boolean isMobAlive()
     {
-        return inventory;
+        return mobAlive;
     }
 
-    public void setInventory(ArrayList<String> inventory)
+    public void setMobAlive(boolean mobAlive)
     {
-        this.inventory = inventory;
+        this.mobAlive = mobAlive;
     }
-
+    
 }

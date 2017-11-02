@@ -16,6 +16,14 @@ public class Room
         this.weapon = weapon;
     }
 
+    public Room(String description, int gold, Weapon weapon, Potion potion)
+    {
+        this.description = description;
+        this.gold = gold;
+        this.weapon = weapon;
+        this.potion = potion;
+    }
+    
     public Room(String description, Potion potion)
     {
         this.description = description;
@@ -47,7 +55,11 @@ public class Room
     {
         return potion;
     }
-    
+
+    public void setPotion(Potion potion)
+    {
+        this.potion = potion;
+    }
     
     public int getGold()
     {

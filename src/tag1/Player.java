@@ -8,7 +8,8 @@ public class Player implements Serializable
 
     private String firstName;
     private String lastName;
-    private int health;
+    private int health = 100;
+    private int damage = 5;
     private int goldInv;
     private Weapon weapon;
     private ArrayList<Item> pInventory = new ArrayList();
@@ -20,6 +21,16 @@ public class Player implements Serializable
         this.goldInv = goldInv;
     }
 
+    public int getDamage()
+    {
+        return damage;
+    }
+
+    public void setDamage(int damage)
+    {
+        this.damage = damage;
+    }
+    
     public Weapon getWeapon()
     {
         return weapon;
