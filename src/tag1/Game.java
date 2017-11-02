@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import textio.SysTextIO;
 import textio.*;
 
@@ -25,7 +23,7 @@ public class Game
     Player player;
     File highscore = new File("Players.txt");
     Weapon knife = new Weapon(20, "Knife of a Thousand Truths", "Foretold by Salzman");
-    Weapon sword = new Weapon(20, "Ashbringer", "So it was that over the course of time,"
+    Weapon sword = new Weapon(22, "Ashbringer", "So it was that over the course of time,"
             + " \nthe man and the weapon seemed as one. Ashbringer became a name of legend,"
             + " \nattributed not just to the fearsome blade but also\nto the relentless knight who wielded it.");
     Potion potion = new Potion(50, "King's Moss", "The blue liquid inside gives a bonus to your health");
@@ -39,7 +37,7 @@ public class Game
     public static final String QUIT = "Quit Game";
     public static final String FIGHT = "Fight";
     public static final String RUN = "Run";
-    public boolean isInCombat = false;
+//    public boolean isInCombat = false;
     public static final String ANSI_RED = "\u001B[31m"; // text color red
     public static final String ANSI_RESET = "\u001B[0m"; // text color normal
     public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m"; // text background color green
@@ -60,13 +58,15 @@ public class Game
     {
         while (!rx.equals(rooms.get(14)))
         {
-            io.put("Erik is in room " + mrx.getDescription());
+            if (DEBUG == true)
+            {
+                io.put("Erik is in room " + mrx.getDescription());
+            }
             io.put(rx.getDescription());
             getOptions();
             int select = io.select("\n\nPick a direction to go\n", validOptions, "");
             io.put(Integer.toString(select)); // delete?
             playerCommands(select, validOptions);
-//            savePlayers(highscore); // FIX MIG!!!!!!!!!!!
             if (rx == mrx)
             {
                 if (mrx == rooms.get(14))
@@ -79,18 +79,19 @@ public class Game
                 }
                 else
                 {
-                    validOptions2.add(FIGHT);
-                    validOptions2.add(RUN);
-                    select = io.select("\nPick an option\n", validOptions2,"");
-                    playerCommands2(select, validOptions2);
+//                    validOptions2.add(FIGHT);
+//                    validOptions2.add(RUN);
+//                    select = io.select("\nPick an option\n", validOptions2,"");
+                    boolean isInCombat = combat(rx, mrx, io, player, monster /*, select, validOptions2*/);
                     validOptions2.clear();
                     
-                    while(isInCombat == true)
+                     
+                    while(isInCombat)
                     {
-                    validOptions2.add(FIGHT);
-                    validOptions2.add(RUN);
-                    select = io.select("\nPick an option\n", validOptions2,"");
-                    playerCommands2(select, validOptions2);
+//                    validOptions2.add(FIGHT);
+//                    validOptions2.add(RUN);
+//                    select = io.select("\nPick an option\n", validOptions2,"");
+                    isInCombat = combat(rx, mrx, io, player, monster /*, select, validOptions2*/);
                     }
                     
 //                    validOptions2.clear();                  
@@ -153,18 +154,22 @@ public class Game
             player.setDamage(100);
         }
         players.add(player);
-        HSfileReader();
+        HSprint();
     }
 
-    private void HSfileReader()
+    private void HSprint()
     {
-        try 
+        HSsort();
+        io.put("\n\n*******HIGH SCORE LIST*******\n\n");
+        for(Player p : players)
         {
+            io.put(p.toString());
+        }
+        io.put("\nSCROLL UP FOR HIGH SCORE LIST!\n*****************************\n\n");
+    }
 
-            io.put("\n\n*******HIGH SCORE LIST*******\n\n");
-            FileInputStream fi = new FileInputStream(highscore);
-            ObjectInputStream oi = new ObjectInputStream(fi);
-            players = (ArrayList<Player>) oi.readObject();
+    private void HSsort()
+    {
             Collections.sort(players, new Comparator<Player>()
             {
                 @Override
@@ -173,24 +178,7 @@ public class Game
                     return o2.getGoldInv() - o1.getGoldInv();
                 }
             });
-            for(Player p : players)
-            {
-                io.put(p.toString());
-            }
-
-            io.put("\nSCROLL UP FOR HIGH SCORE LIST!\n*****************************\n\n");
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-        } 
-        catch (ClassNotFoundException ex)
-        {
-            ex.printStackTrace();
-        }
-        
-//        System.out.println(players);
-        // players.clear(); // Use to clear highscore list
+            
     }
     
     private void savePlayers(File highscore)
@@ -421,20 +409,20 @@ public class Game
                 rx = rx.getWest();
                 break;
             case QUIT:
-//                savePlayers(highscore); // FIX MIG !!!!!!!!!!!!
                 System.exit(0);
                 break;
             case SEARCH:
                 searchRoom();
                 break;
             case INVENTORY:
-                if (player.getpInventory() == null)
+                String l = "Inventory: ";
+                io.put(l);
+                if (!(player.getpInventory().contains(knife)))
                 {
-                    io.put("You inventory is empty!");
+                    io.put("Your inventory is empty!");
                 }
                 else
                 {
-                    io.put("Inventory: ");
                     String out  = "";
                     for(Item item : player.getpInventory())
                     {
@@ -442,27 +430,32 @@ public class Game
                     }
                     io.put(out);
                 }
+                
                 break;
             default: //ignore
         }
         validOptions.clear();
     }
     
-    private void playerCommands2(int input, ArrayList<String> validOptions2) throws IOException, ClassNotFoundException
+    public boolean combat(Room rx, Room mrx, TextIO io,Player player, Monster monster/*, int input, ArrayList<String> validOptions2*/) throws IOException, ClassNotFoundException
     {
+        boolean isInCombat = true;
         getPlayerStats();
-        switch (validOptions2.get(input))
+        validOptions2.add(FIGHT);
+        validOptions2.add(RUN);
+        int select = io.select("\nPick an option\n", validOptions2,"");
+        switch (validOptions2.get(select))
         {
             case FIGHT:
-                isInCombat = true;
-                combat();
+                combatRound();
                 if (player.getHealth() <= 0)
                 {
                     playerWasted();
                     System.exit(0);
+                    isInCombat = false;
                     break;
-                }
-                if (monster.getHealth() <= 0)
+                } 
+                else if (monster.getHealth() <= 0)
                 {
                     monster.setMobAlive(false);
                     isInCombat = false;
@@ -471,8 +464,10 @@ public class Game
                     rx.setGold(rx.getGold() + monster.getGoldInv());
                     monster.setGoldInv(0);
                     mrx = rooms.get(15);
+                    isInCombat = false;
                     break;
                 }
+                
                 break;
             case RUN:
                 io.put("You ran to the entrance, but the door is locked!");
@@ -482,9 +477,10 @@ public class Game
             default: //ignore
         }
         validOptions2.clear();
+        return isInCombat;
     }
 
-    private void combat()
+    private void combatRound()
     {
         while (monster.isMobAlive() == true) 
         {
@@ -587,11 +583,13 @@ public class Game
         if (rx.equals(rooms.get(14)))
         {
             player.setGoldInv(player.getGoldInv() + 500);
+            HSsort();
             savePlayers(highscore);
             io.put(rooms.get(14).getDescription()
                     + "\n(╯°□°）╯︵ ┻━┻"
                     + "\nPress F6 to play again!"
                     + "\n┬─┬﻿ ノ( ゜-゜ノ)\n");
+            HSprint();
         }
     }
     

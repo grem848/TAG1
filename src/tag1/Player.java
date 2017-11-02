@@ -21,6 +21,9 @@ public class Player implements Serializable
         this.goldInv = goldInv;
     }
 
+
+
+    
     public int getDamage()
     {
         return damage;
